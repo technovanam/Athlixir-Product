@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NAV_LINKS } from "@/lib/constants";
@@ -18,28 +17,41 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [sliderStyle, setSliderStyle] = useState({ left: 0, width: 0 });
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState("#home");
   const navRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
 
   // Set mounted state
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Handle scroll effect
+  // Handle scroll effect and active section detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      
+      // Detect active section based on scroll position
+      const sections = NAV_LINKS.map(link => link.href.replace("#", ""));
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveSection(`#${sections[i]}`);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu on section change
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [pathname]);
+  }, [activeSection]);
 
   // Update slider position
   useEffect(() => {
@@ -67,7 +79,18 @@ export default function Header() {
       clearTimeout(timer);
       window.removeEventListener("resize", updateSlider);
     };
-  }, [pathname, mounted]);
+  }, [activeSection, mounted]);
+
+  // Smooth scroll handler
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setActiveSection(href);
+    }
+  };
 
   return (
     <header
@@ -100,19 +123,20 @@ export default function Header() {
                 }}
               />
               {NAV_LINKS.map((link) => (
-                <Link
+                <a
                   key={link.href}
                   href={link.href}
-                  data-active={pathname === link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  data-active={activeSection === link.href}
                   className={cn(
-                    "relative text-[15px] font-medium transition-colors duration-200 hover:text-[#FF5722] py-2",
-                    pathname === link.href
+                    "relative text-[15px] font-medium transition-colors duration-200 hover:text-[#FF5722] py-2 cursor-pointer",
+                    activeSection === link.href
                       ? "text-[#FF5722]"
                       : "text-white/80"
                   )}
                 >
                   {link.name}
-                </Link>
+                </a>
               ))}
             </div>
           </div>
@@ -154,18 +178,19 @@ export default function Header() {
         >
           <div className="flex flex-col gap-4 py-4 border-t border-white/10">
             {NAV_LINKS.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={cn(
-                  "text-base font-medium py-2 transition-colors duration-200 hover:text-[#FF5722]",
-                  pathname === link.href
+                  "text-base font-medium py-2 transition-colors duration-200 hover:text-[#FF5722] cursor-pointer",
+                  activeSection === link.href
                     ? "text-[#FF5722]"
                     : "text-white/80"
                 )}
               >
                 {link.name}
-              </Link>
+              </a>
             ))}
             <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
               <Link href="/login">

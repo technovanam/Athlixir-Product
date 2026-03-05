@@ -12,7 +12,7 @@ import VerifiedBadge from "./VerifiedBadge";
  */
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background with Image */}
       <div className="absolute inset-0 z-0">
         {/* Background Image */}
@@ -39,7 +39,7 @@ export default function HeroSection() {
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
         
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent" />
       </div>
 
       {/* Content */}
@@ -89,7 +89,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Card - Verified Badge */}
-        <div className="absolute right-4 xl:right-8 2xl:right-16 top-1/2 -translate-y-1/3 z-20">
+        <div className="absolute right-4 xl:right-8 2xl:right-16 top-[58%] z-20">
           <VerifiedBadge />
         </div>
       </div>
