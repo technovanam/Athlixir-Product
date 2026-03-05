@@ -10,7 +10,7 @@ import { SCOUTING_STATS } from "@/lib/constants";
  */
 export default function ScoutingReachCard() {
   return (
-    <Card className="w-[260px] animate-float">
+    <Card className="w-[220px] animate-float">
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
         <div className="w-6 h-6 rounded-md bg-[#FF5722]/20 flex items-center justify-center">

@@ -10,7 +10,7 @@ import { Card } from "@/components/ui";
 export default function VerifiedBadge() {
   return (
     <Card
-      className="w-[200px] text-center animate-float"
+      className="w-[230px] text-center animate-float"
       glassmorphism
     >
       {/* Header */}
