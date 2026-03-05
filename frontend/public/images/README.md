@@ -4,7 +4,10 @@ Place your images here:
 
 ## Required Images
 
-- `hero-bg.jpg` - Hero section background image (recommended: 1920x1080 or higher, dark sports field/grass image)
+- `landing.jpg` - Hero section background image (recommended: 1920x1080 or higher, dark sports field/grass image)
+- `athlete-legs.jpg` - About section main image (athlete legs/training shot, ~640x560)
+- `training.jpg` - About section training card (runners silhouette, ~440x360)
+- `ecosystem.jpg` - About section ecosystem card (athletes group, ~400x360)
 
 ## Image Guidelines
 
