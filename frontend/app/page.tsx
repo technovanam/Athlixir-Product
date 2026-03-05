@@ -1,5 +1,5 @@
 import { Header, Footer } from "@/components/layout";
-import { HeroSection } from "@/components/sections/home";
+import { HeroSection, AboutSection } from "@/components/sections/home";
 
 /**
  * Home Page
@@ -11,6 +11,7 @@ export default function HomePage() {
       <Header />
       <main>
         <HeroSection />
+        <AboutSection />
         {/* Additional sections will be added here */}
       </main>
       <Footer />
