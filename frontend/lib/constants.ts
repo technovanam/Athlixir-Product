@@ -1,11 +1,11 @@
 // Navigation Links
 export const NAV_LINKS = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Features", href: "/features" },
-  { name: "Research", href: "/research" },
-  { name: "For Athletes", href: "/for-athletes" },
-  { name: "Contact", href: "/contact" },
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Features", href: "#features" },
+  { name: "Research", href: "#research" },
+  { name: "For Athletes", href: "#for-athletes" },
+  { name: "Contact", href: "#contact" },
 ] as const;
 
 // Site Metadata
@@ -27,18 +27,5 @@ export const SCOUTING_STATS = {
   athlixirPowered: 94,
 } as const;
 
-// Color Palette
-export const COLORS = {
-  primary: "#FF5722", // Orange/Coral
-  secondary: "#1A1A1A", // Dark background
-  accent: "#FF6B35", // Lighter orange
-  text: {
-    primary: "#FFFFFF",
-    secondary: "#A0A0A0",
-    muted: "#6B7280",
-  },
-  background: {
-    dark: "#0A0A0A",
-    card: "rgba(26, 26, 26, 0.8)",
-  },
-} as const;
+// Re-export design tokens for convenience
+export { COLORS, TYPOGRAPHY, SPACING, COMPONENT_SPACING } from "./design-tokens";
