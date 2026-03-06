@@ -1,12 +1,12 @@
 ﻿"use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, useRef, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Lock, User, ArrowRight, ShieldCheck, Loader2,
-  Trophy, Users, Target, Phone, CheckCircle2, KeyRound,
+  Trophy, Users, Target, Phone, CheckCircle2, X,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -63,6 +63,9 @@ export default function SignupPage() {
   const [otpLoading, setOtpLoading] = useState<boolean>(false);
   const [phoneVerified, setPhoneVerified] = useState<boolean>(false);
   const [otpError, setOtpError]     = useState<string>("");
+  const [showOtpModal, setShowOtpModal] = useState<boolean>(false);
+  const [otpDigits, setOtpDigits]   = useState<string[]>(["" ,"", "", ""]);
+  const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
   // Auto-dismiss error after 5 s
   useEffect(() => {
@@ -82,7 +85,9 @@ export default function SignupPage() {
       // TODO: replace with real OTP send API call
       await new Promise((resolve) => setTimeout(resolve, 1200));
       setOtpSent(true);
+      setOtpDigits(["", "", "", ""]);
       set("otp", "");
+      setShowOtpModal(true);
     } catch {
       setOtpError("Failed to send OTP. Try again.");
     } finally {
@@ -91,7 +96,8 @@ export default function SignupPage() {
   };
 
   const handleVerifyOtp = async () => {
-    if (!formData.otp) return setOtpError("Enter the OTP sent to your phone.");
+    const otp = otpDigits.join("");
+    if (otp.length < 4) return setOtpError("Enter all 4 digits.");
     setOtpLoading(true);
     setOtpError("");
     try {
@@ -99,6 +105,7 @@ export default function SignupPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setPhoneVerified(true);
       setOtpSent(false);
+      setShowOtpModal(false);
     } catch {
       setOtpError("Invalid OTP. Please try again.");
     } finally {
@@ -143,6 +150,114 @@ export default function SignupPage() {
 
   return (
     <div className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#050505]">
+
+      {/* OTP Modal */}
+      <AnimatePresence>
+        {showOtpModal && (
+          <motion.div
+            key="otp-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-sm bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+            >
+              {/* Close */}
+              <button
+                type="button"
+                onClick={() => { setShowOtpModal(false); setOtpError(""); }}
+                className="absolute top-5 right-5 text-gray-500 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                  <Phone size={26} className="text-orange-500" />
+                </div>
+              </div>
+
+              <h2 className="text-white font-black text-xl uppercase tracking-widest text-center mb-1">Verify Phone</h2>
+              <p className="text-gray-500 text-[11px] text-center uppercase tracking-widest mb-6">
+                Enter the 4-digit OTP sent to<br />
+                <span className="text-orange-400 font-bold">+91 {formData.phone}</span>
+              </p>
+
+              {/* 4 digit boxes */}
+              <div className="flex justify-center gap-3 mb-4">
+                {otpDigits.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={otpRefs[i]}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "");
+                      const next = [...otpDigits];
+                      next[i] = val;
+                      setOtpDigits(next);
+                      setOtpError("");
+                      if (val && i < 3) otpRefs[i + 1].current?.focus();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace" && !otpDigits[i] && i > 0) {
+                        otpRefs[i - 1].current?.focus();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
+                      const next = ["", "", "", ""];
+                      pasted.split("").forEach((ch, idx) => { if (idx < 4) next[idx] = ch; });
+                      setOtpDigits(next);
+                      otpRefs[Math.min(pasted.length, 3)].current?.focus();
+                    }}
+                    disabled={otpLoading}
+                    suppressHydrationWarning
+                    className="w-14 h-14 text-center text-2xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-orange-500 focus:bg-white/[0.08] transition-all"
+                  />
+                ))}
+              </div>
+
+              {otpError && (
+                <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest text-center mb-4">{otpError}</p>
+              )}
+
+              {/* Verify button */}
+              <button
+                type="button"
+                onClick={handleVerifyOtp}
+                disabled={otpLoading || otpDigits.join("").length < 4}
+                suppressHydrationWarning
+                className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2"
+              >
+                {otpLoading ? <Loader2 size={18} className="animate-spin" /> : "Verify OTP"}
+              </button>
+
+              <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest mt-4">
+                Didn&apos;t receive?{" "}
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpLoading}
+                  className="text-orange-500 font-black hover:text-orange-400 transition-colors"
+                >
+                  Resend
+                </button>
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Background */}
       <div className="absolute inset-0 -z-10">
@@ -264,17 +379,26 @@ export default function SignupPage() {
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
                   Phone Number
                 </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
+                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/[0.08] transition-all overflow-hidden">
+                  {/* Phone icon */}
+                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0 border-r border-white/10">
                     <Phone size={18} />
                   </div>
+                  {/* Fixed +91 prefix */}
+                  <span className="pl-4 pr-1 py-4 text-gray-700 text-base select-none shrink-0">
+                    +91
+                  </span>
+                  {/* Digits input */}
                   <input
                     type="tel"
-                    placeholder="+1 000 000 0000"
-                    className={`${inputCls} pr-28`}
+                    inputMode="numeric"
+                    maxLength={10}
+                    placeholder="XXXXX XXXXX"
+                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
                     value={formData.phone}
                     onChange={(e) => {
-                      set("phone", e.target.value);
+                      const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      set("phone", digits);
                       setPhoneVerified(false);
                       setOtpSent(false);
                       set("otp", "");
@@ -284,13 +408,13 @@ export default function SignupPage() {
                     suppressHydrationWarning
                   />
                   {/* Verify / Verified button */}
-                  <div className="absolute inset-y-0 right-3 flex items-center">
+                  <div className="pr-3 flex items-center shrink-0">
                     {phoneVerified ? (
-                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest pr-1">
+                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
                         <CheckCircle2 size={16} className="shrink-0" />
                         Verified
                       </span>
-                    ) : formData.phone.replace(/\D/g, "").length >= 10 ? (
+                    ) : formData.phone.length >= 10 ? (
                       <button
                         type="button"
                         onClick={handleSendOtp}
@@ -306,58 +430,7 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                {/* OTP row */}
-                <AnimatePresence>
-                  {otpSent && !phoneVerified && (
-                    <motion.div
-                      key="otp-row"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-2 space-y-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                          OTP – Check Your Phone
-                        </label>
-                        <div className="flex gap-3">
-                          <div className="relative group flex-1">
-                            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                              <KeyRound size={18} />
-                            </div>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              maxLength={6}
-                              placeholder="Enter 6-digit OTP"
-                              className={inputCls}
-                              value={formData.otp}
-                              onChange={(e) => {
-                                set("otp", e.target.value.replace(/\D/g, ""));
-                                setOtpError("");
-                              }}
-                              disabled={otpLoading || loading}
-                              suppressHydrationWarning
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={handleVerifyOtp}
-                            disabled={otpLoading || loading || formData.otp.length < 6}
-                            suppressHydrationWarning
-                            className="px-5 py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all shrink-0"
-                          >
-                            {otpLoading ? <Loader2 size={16} className="animate-spin" /> : "Confirm"}
-                          </button>
-                        </div>
-                        {otpError && (
-                          <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest ml-1">{otpError}</p>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* OTP row removed — handled by modal */}
               </div>
 
               {/* Password + Confirm */}
