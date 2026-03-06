@@ -204,7 +204,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               type="file"
               accept="image/*"
               onChange={handlePhotoChange}
-              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
+              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
             />
           </div>
 

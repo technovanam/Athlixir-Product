@@ -139,6 +139,7 @@ export default function OnboardingPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-5xl px-4 md:px-6 relative z-10 flex flex-col max-h-[calc(100vh-4rem)]"
       >
+        
         {/* Header */}
         <div className="flex flex-col items-center mb-3 shrink-0">
 
@@ -171,7 +172,7 @@ export default function OnboardingPage() {
 
         {/* Card */}
         <div
-          className="bg-black/40 backdrop-blur-3xl border border-white/10 rounded-4xl p-4 md:p-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-y-auto flex-1"
+          className="bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-4 md:p-6 shadow-lg overflow-y-auto flex-1"
           onFocus={() => setError("")}
         >
           {/* Error banner */}
@@ -184,7 +185,7 @@ export default function OnboardingPage() {
                 transition={{ duration: 0.25, ease: "easeOut" }}
                 className="mb-6 overflow-hidden"
               >
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs font-bold uppercase tracking-widest text-center">
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs font-bold uppercase tracking-widest text-center">
                   {error}
                 </div>
               </motion.div>

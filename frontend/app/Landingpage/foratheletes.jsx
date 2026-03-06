@@ -49,18 +49,10 @@ const ForAthletes = () => {
                     <GooeyButton
                         label="Create Free Profile"
                         href="/signup"
-<<<<<<< HEAD
                         active={true}
                     />
                     <GooeyButton
                         label="Explore Platform"
-=======
-                        className="px-12 py-5 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-lg text-sm uppercase tracking-widest hover:scale-105 min-w-[240px] flex items-center justify-center"
-                    >
-                        Create Free Profile
-                    </Link>
-                    <Link
->>>>>>> 0027ef71d71ba168e4af98dcc214890d9616d586
                         href="/login"
                     />
                 </div>
