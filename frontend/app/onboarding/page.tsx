@@ -16,7 +16,10 @@ import {
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [form, setForm] = useState<FormState>(() => ({
+    ...INITIAL_FORM,
+    name: (typeof window !== "undefined" && localStorage.getItem("athlixir_signup_name")) || "",
+  }));
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -43,7 +46,7 @@ export default function OnboardingPage() {
     if (key === "dateOfBirth" && value) {
       const ageNum = parseInt(calculateAge(value as string), 10);
       if (!isNaN(ageNum) && ageNum < 16) {
-        setError("You must be at least 16 years old.");
+        setError("Age must be at least 16.");
         return;
       }
     }
@@ -60,11 +63,10 @@ export default function OnboardingPage() {
     const checks: [boolean, string][] = [
       [!!form.name.trim(), "Name is required."],
       [!!form.dateOfBirth, "Date of birth is required."],
-      [parseInt(age, 10) >= 16, "You must be at least 16 years old."],
+      [parseInt(age, 10) >= 16, "Age must be at least 16."],
       [!!form.gender, "Gender is required."],
-      [!!form.nationality, "Nationality is required."],
-      [!!form.primarySport, "Primary sport is required."],
-      [!!form.category, "Category is required."],
+      [!!form.height, "Height is required."],
+      [!!form.weight, "Weight is required."],
       [!!form.state, "State is required."],
       [!!form.district, "District is required."],
       [!!form.cityTown.trim(), "City / Town is required."],
@@ -94,7 +96,7 @@ export default function OnboardingPage() {
     try {
       // TODO: wire up your save/API call here
       await new Promise((r) => setTimeout(r, 1000));
-      console.log("Onboarding complete", form);
+      window.location.assign("/terms");
     } catch {
       setError("Failed to complete. Please try again.");
     } finally {
@@ -139,13 +141,6 @@ export default function OnboardingPage() {
       >
         {/* Header */}
         <div className="flex flex-col items-center mb-3 shrink-0">
-          <Link href="/">
-            <svg width="36" height="36" viewBox="0 0 52 52" className="mb-2">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
-            </svg>
-          </Link>
 
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-orange-500/20 flex items-center justify-center shrink-0">
@@ -202,7 +197,6 @@ export default function OnboardingPage() {
                 key="step1"
                 form={form}
                 age={age}
-                categories={categories}
                 updateField={updateField}
                 saving={saving}
                 onNext={handleSaveStep1}
