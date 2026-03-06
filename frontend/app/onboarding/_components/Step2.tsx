@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
 import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
-import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES } from "./types";
+import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES, SPORTS_LIST } from "./types";
 
 interface Step2Props {
   form: FormState;
@@ -38,9 +38,15 @@ export function Step2({
 
             <div>
               <FieldLabel>Primary Sport</FieldLabel>
-              <div className={`${inputCls} cursor-not-allowed opacity-60 flex items-center`}>
-                Athletics
-              </div>
+              <StyledSelect
+                value={form.primarySport}
+                onChange={(e) => updateField("primarySport", e.target.value)}
+              >
+                <option value="">Select sport</option>
+                {SPORTS_LIST.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </StyledSelect>
             </div>
 
             <div>
@@ -57,64 +63,23 @@ export function Step2({
               </StyledSelect>
             </div>
 
-          </div>
-        </SectionCard>
-
-        
-
-        {/* Experience */}
-        <SectionCard icon={<Award size={18} className="text-orange-500" />} title="Experience">
-          <div className="grid gap-4">
-
             <div>
-              <FieldLabel>Years of Experience</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="e.g. 5"
-                value={form.yearsOfExperience}
-                onChange={(e) => updateField("yearsOfExperience", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <FieldLabel>Current Level</FieldLabel>
+              <FieldLabel>Athlete Level</FieldLabel>
               <StyledSelect
                 value={form.currentLevel}
                 onChange={(e) => updateField("currentLevel", e.target.value)}
               >
-                <option value="">Select</option>
+                <option value="">Select level</option>
                 {CURRENT_LEVELS.map((l) => (
                   <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
               </StyledSelect>
             </div>
 
-            <div>
-              <FieldLabel>Current Academy (optional)</FieldLabel>
-              <input
-                type="text"
-                className={inputCls}
-                placeholder="Academy name"
-                value={form.currentAcademy}
-                onChange={(e) => updateField("currentAcademy", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <FieldLabel>Current Coach (optional)</FieldLabel>
-              <input
-                type="text"
-                className={inputCls}
-                placeholder="Coach name"
-                value={form.currentCoach}
-                onChange={(e) => updateField("currentCoach", e.target.value)}
-              />
-            </div>
-
           </div>
         </SectionCard>
+
+        
 
         {/* Preferences */}
         <SectionCard icon={<Target size={18} className="text-orange-500" />} title="Preferences">
@@ -153,7 +118,7 @@ export function Step2({
         <button
           type="button"
           onClick={onBack}
-          className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-2xl text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all"
+          className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all"
         >
           <ChevronLeft size={18} />
           Back
@@ -163,7 +128,7 @@ export function Step2({
           type="button"
           onClick={onComplete}
           disabled={saving}
-          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-[0_10px_30px_rgba(255,87,34,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Complete Profile

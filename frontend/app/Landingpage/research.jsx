@@ -5,7 +5,7 @@ import { ArrowRight, Microscope, Quote } from 'lucide-react';
 
 const Research = () => {
     return (
-        <section id="research" className="py-20 md:py-28 bg-[#0A0A0A] relative overflow-hidden">
+        <section id="research" className="py-20 md:py-28 bg-[#0F0F0F] relative overflow-hidden">
             {/* Background decorative elements */}
             <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#FF5722]/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -16,7 +16,7 @@ const Research = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    className="relative rounded-[2.5rem] overflow-hidden shadow-2xl h-[550px] border border-white/10 group"
+                    className="relative rounded-xl overflow-hidden shadow-lg h-[550px] border border-white/[0.08] group"
                 >
                     <img
                         src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&q=80"
@@ -26,7 +26,7 @@ const Research = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
 
                     {/* Floating Info Card */}
-                    <div className="absolute bottom-8 left-8 right-8 p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
+                    <div className="absolute bottom-8 left-8 right-8 p-6 rounded-lg bg-[#161616] backdrop-blur-xl border border-white/[0.08] shadow-lg">
                         <div className="flex items-center space-x-3 mb-2">
                             <Microscope className="w-4 h-4 text-[#FF5722]" />
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Evidence Based</span>
@@ -54,7 +54,7 @@ const Research = () => {
                         Data Science.
                     </h2>
 
-                    <div className="relative p-10 rounded-3xl bg-white/[0.03] border border-white/10 shadow-2xl overflow-hidden group">
+                    <div className="relative p-10 rounded-xl bg-[#161616] border border-white/[0.08] shadow-lg overflow-hidden group">
                         <Quote className="absolute -top-4 -right-4 w-24 h-24 text-[#FF5722]/10 group-hover:text-[#FF5722]/20 transition-colors" />
 
                         <p className="text-lg md:text-xl font-light italic text-gray-300 leading-snug mb-6 relative z-10">
@@ -72,6 +72,13 @@ const Research = () => {
                         We aren't just building an app; we're building a standard for athletic excellence across Tier-2 and Tier-3 cities.
                     </p>
 
+<<<<<<< HEAD
+=======
+                    <button className="px-10 py-4 bg-transparent border border-white/20 text-white font-bold rounded-md hover:border-[#FF5722] hover:text-[#FF5722] transition-all text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
+                        <span>Read Case Studies</span>
+                        <ArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
+                    </button>
+>>>>>>> 0027ef71d71ba168e4af98dcc214890d9616d586
                 </motion.div>
             </div>
         </section>

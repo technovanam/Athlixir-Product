@@ -73,6 +73,38 @@ const Contact = () => {
                                     <li><Link href="#" className="hover:text-white transition-colors block py-0.5">YouTube</Link></li>
                                 </ul>
                             </div>
+<<<<<<< HEAD
+=======
+
+                            {/* Contact Form */}
+                            <form className="space-y-4">
+                                <input
+                                    type="text"
+                                    placeholder="Your Name"
+                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
+                                    suppressHydrationWarning
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Your Email"
+                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
+                                    suppressHydrationWarning
+                                />
+                                <textarea
+                                    placeholder="Your Message"
+                                    rows={4}
+                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50 resize-none"
+                                />
+                                <button
+                                    type="submit"
+                                    className="w-full py-3 bg-[#FF5722] text-white font-bold rounded-md hover:bg-[#E64A19] transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg"
+                                    suppressHydrationWarning
+                                >
+                                    Send Message
+                                    <ArrowRight size={20} />
+                                </button>
+                            </form>
+>>>>>>> 0027ef71d71ba168e4af98dcc214890d9616d586
                         </div>
 
                         {/* Spacer prevents text from overflowing into background Avatar space */}

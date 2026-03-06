@@ -123,6 +123,7 @@ export default function LoginPage() {
                     }))
                   }
                   required
+                  suppressHydrationWarning
                 />
               </div>
             </div>
@@ -158,6 +159,7 @@ export default function LoginPage() {
                     }))
                   }
                   required
+                  suppressHydrationWarning
                 />
               </div>
             </div>
@@ -167,6 +169,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg disabled:opacity-50"
+              suppressHydrationWarning
             >
               {loading ? (
                 <Loader2 className="animate-spin" size={20} />

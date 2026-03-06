@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
 export const inputCls =
-  "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-orange-500/50 text-sm transition-colors";
+  "w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-orange-500/50 text-sm transition-colors";
 
 // ---------------------------------------------------------------------------
 // Custom fully-themed select — replaces native <select> so option highlight
@@ -61,7 +61,7 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
         onClick={() => setOpen((p) => !p)}
         className={`w-full flex items-center justify-between bg-[#0a0a0a] border ${
           open ? "border-[#FF5722] ring-1 ring-[#FF5722]/40" : "border-[#FF5722]/30"
-        } rounded-xl px-4 py-2.5 text-sm text-white transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        } rounded-md px-4 py-2.5 text-sm text-white transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         <span className={selected && selected.value !== "" ? "text-white" : "text-gray-500"}>
           {selected ? selected.label : "Select"}
@@ -74,7 +74,7 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
 
       {/* Dropdown panel */}
       {open && (
-        <ul className="absolute z-50 mt-1 w-full bg-[#0d0d0d] border border-[#FF5722]/30 rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.7)] max-h-56 overflow-y-auto">
+        <ul className="absolute z-50 mt-1 w-full bg-[#0d0d0d] border border-[#FF5722]/30 rounded-md overflow-hidden shadow-lg max-h-56 overflow-y-auto">
           {options.map((opt) => (
             <li
               key={opt.value}
@@ -112,7 +112,7 @@ export function SectionCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="bg-black/40 border border-white/10 rounded-4xl p-6">
+    <section className="bg-black/40 border border-white/10 rounded-md p-6">
       <h2 className="text-base font-black uppercase tracking-tight text-white mb-4 flex items-center gap-2">
         {icon}
         {title}
