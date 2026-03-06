@@ -29,7 +29,7 @@ export function Step2({
       exit={{ opacity: 0, x: -20 }}
       className="space-y-4"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
 
         {/* Specialization */}
         <SectionCard icon={<Star size={18} className="text-orange-500" />} title="Specialization">
