@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main className="flex-1 flex flex-col w-full">
         <HeroSection />
         <AboutSection />
         <Features />

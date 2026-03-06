@@ -80,12 +80,6 @@ const Features = () => {
                         </div>
                     </div>
 
-                    <div className="mt-auto relative z-10">
-                        <button className="px-8 py-4 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
-                            <span>Explore Dashboard</span>
-                            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                        </button>
-                    </div>
                 </motion.div>
 
                 {/* Right Side - Content & Preview */}

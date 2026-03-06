@@ -72,10 +72,6 @@ const Research = () => {
                         We aren't just building an app; we're building a standard for athletic excellence across Tier-2 and Tier-3 cities.
                     </p>
 
-                    <button className="px-10 py-4 bg-transparent border border-white/20 text-white font-bold rounded-full hover:border-[#FF5722] hover:text-[#FF5722] transition-all text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
-                        <span>Read Case Studies</span>
-                        <ArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
-                    </button>
                 </motion.div>
             </div>
         </section>

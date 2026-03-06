@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
+import GooeyButton from '@/components/GooeyButton';
+
 const ForAthletes = () => {
     return (
         <section id="for-athletes" className="relative h-[500px] md:h-[650px] flex items-center justify-center overflow-hidden bg-black">
@@ -44,18 +46,15 @@ const ForAthletes = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center items-center space-y-5 sm:space-y-0 sm:space-x-8">
-                    <Link
+                    <GooeyButton
+                        label="Create Free Profile"
                         href="/signup"
-                        className="px-12 py-5 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-[0_0_30px_rgba(255,87,34,0.4)] text-sm uppercase tracking-widest hover:scale-105 min-w-[240px] flex items-center justify-center"
-                    >
-                        Create Free Profile
-                    </Link>
-                    <Link
+                        active={true}
+                    />
+                    <GooeyButton
+                        label="Explore Platform"
                         href="/login"
-                        className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-black transition-all text-sm uppercase tracking-widest min-w-[240px] hover:scale-105 flex items-center justify-center"
-                    >
-                        Explore Platform
-                    </Link>
+                    />
                 </div>
             </div>
         </section>

@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { Badge, Button } from "@/components/ui";
+import { Badge } from "@/components/ui";
 import { Target, TrendingUp, Users } from "lucide-react";
 
 /**
@@ -70,14 +69,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div className="pt-4">
-              <Link href="#features">
-                <Button variant="primary" size="md">
-                  LEARN MORE
-                </Button>
-              </Link>
-            </div>
+
           </div>
 
           {/* Right Content - Image Cards */}
