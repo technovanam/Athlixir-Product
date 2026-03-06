@@ -62,6 +62,7 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
         className={`w-full flex items-center justify-between bg-[#0a0a0a] border ${
           open ? "border-[#FF5722] ring-1 ring-[#FF5722]/40" : "border-[#FF5722]/30"
         } rounded-none px-4 py-2.5 text-sm text-white transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        suppressHydrationWarning
       >
         <span className={selected && selected.value !== "" ? "text-white" : "text-gray-500"}>
           {selected ? selected.label : "Select"}
