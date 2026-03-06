@@ -57,6 +57,19 @@ export function Step2({
               </StyledSelect>
             </div>
 
+            <div>
+              <FieldLabel>Athlete Level</FieldLabel>
+              <StyledSelect
+                value={form.currentLevel}
+                onChange={(e) => updateField("currentLevel", e.target.value)}
+              >
+                <option value="">Select level</option>
+                {CURRENT_LEVELS.map((l) => (
+                  <option key={l.value} value={l.value}>{l.label}</option>
+                ))}
+              </StyledSelect>
+            </div>
+
           </div>
         </SectionCard>
 
