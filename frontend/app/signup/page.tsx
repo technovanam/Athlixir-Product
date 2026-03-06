@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Lock, User, ArrowRight, ShieldCheck, Loader2,
+  User, ArrowRight, Loader2,
   Trophy, Users, Target, Phone, CheckCircle2, X,
 } from "lucide-react";
 
@@ -17,8 +17,6 @@ type Role = "athlete" | "coach" | "user";
 interface SignupFormData {
   fullName: string;
   phone: string;
-  password: string;
-  confirmPassword: string;
   role: Role;
   otp: string;
 }
@@ -47,8 +45,6 @@ export default function SignupPage() {
   const [formData, setFormData] = useState<SignupFormData>({
     fullName: "",
     phone: "",
-    password: "",
-    confirmPassword: "",
     role: "athlete",
     otp: "",
   });
@@ -120,17 +116,13 @@ export default function SignupPage() {
     if (!phoneVerified) {
       return setError("Please verify your phone number before continuing.");
     }
-    if (formData.password !== formData.confirmPassword) {
-      return setError("Passwords do not match");
-    }
-    if (formData.password.length < 6) {
-      return setError("Password must be at least 6 characters");
-    }
 
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       localStorage.setItem("athlixir_signup_name", formData.fullName);
+      localStorage.setItem("athlixir_signup_phone", formData.phone);
+      localStorage.setItem("athlixir_signup_role", formData.role);
       if (formData.role === "coach") {
         router.push("/coach/dashboard");
       } else if (formData.role === "user") {
@@ -392,93 +384,54 @@ export default function SignupPage() {
                     disabled={loading || phoneVerified}
                     suppressHydrationWarning
                   />
-                  <div className="pr-3 flex items-center shrink-0">
-                    {phoneVerified ? (
+                  {phoneVerified && (
+                    <div className="pr-4 flex items-center shrink-0">
                       <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
                         <CheckCircle2 size={16} className="shrink-0" />
                         Verified
                       </span>
-                    ) : formData.phone.length >= 10 ? (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={otpLoading || loading}
-                        suppressHydrationWarning
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
-                      >
-                        {otpLoading && !otpSent ? (
-                          <Loader2 size={14} className="animate-spin" />
-                        ) : otpSent ? "Resend" : "Verify"}
-                      </button>
-                    ) : null}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Password + Confirm */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                    Access Key
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                      <Lock size={18} />
-                    </div>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className={signupInputCls}
-                      value={formData.password}
-                      onChange={(e) => set("password", e.target.value)}
-                      required
-                      disabled={loading}
-                      suppressHydrationWarning
-                    />
-                  </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                    Confirm Key
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                      <ShieldCheck size={18} />
-                    </div>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className={signupInputCls}
-                      value={formData.confirmPassword}
-                      onChange={(e) => set("confirmPassword", e.target.value)}
-                      required
-                      disabled={loading}
-                      suppressHydrationWarning
-                    />
-                  </div>
-                </div>
-              </div>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={loading}
-                suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_40px_rgba(249,115,22,0.5)] flex items-center justify-center gap-3 group mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    Create Profile
-                    <ArrowRight
-                      size={18}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
-                  </>
-                )}
-              </button>
+              {/* Submit / Verify */}
+              {!phoneVerified ? (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpLoading || !formData.fullName || formData.phone.length < 10}
+                  suppressHydrationWarning
+                  className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_40px_rgba(249,115,22,0.5)] flex items-center justify-center gap-3 mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {otpLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Verify Phone
+                      <Phone size={18} />
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  suppressHydrationWarning
+                  className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_40px_rgba(249,115,22,0.5)] flex items-center justify-center gap-3 group mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Create Profile
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+              )}
             </form>
           </div>
         </div>
