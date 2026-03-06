@@ -1,5 +1,6 @@
-import { Header, Footer } from "@/components/layout";
+import { Header } from "@/components/layout";
 import { HeroSection, AboutSection } from "@/components/sections/home";
+import { Features, Research, ForAthletes, Contact } from "./Landingpage";
 
 /**
  * Home Page
@@ -12,9 +13,11 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <AboutSection />
-        {/* Additional sections will be added here */}
+        <Features />
+        <Research />
+        <ForAthletes />
+        <Contact />
       </main>
-      <Footer />
     </>
   );
 }
