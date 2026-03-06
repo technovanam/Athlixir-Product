@@ -1,15 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { FieldLabel, SectionCard, inputCls } from "./shared";
-import {
-  FormState,
-  CURRENT_LEVELS,
-  PREFERRED_TRAINING_TYPES,
-  BLOOD_GROUPS,
-  DISABILITY_CATEGORIES,
-} from "./types";
+import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
+import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
+import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES } from "./types";
 
 interface Step2Props {
   form: FormState;
@@ -37,96 +31,36 @@ export function Step2({
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-        {/* Physical & Basic */}
-        <SectionCard icon={<Ruler size={18} className="text-orange-500" />} title="Physical & Basic">
-          <div className="grid grid-cols-2 gap-4">
+        {/* Specialization */}
+        <SectionCard icon={<Star size={18} className="text-orange-500" />} title="Specialization">
+          <p className="text-gray-500 text-xs mb-3">Defines the athlete&apos;s specialization.</p>
+          <div className="grid gap-4">
 
             <div>
-              <FieldLabel>Height (cm)</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="175"
-                value={form.height}
-                onChange={(e) => updateField("height", e.target.value)}
-              />
+              <FieldLabel>Primary Sport</FieldLabel>
+              <div className={`${inputCls} cursor-not-allowed opacity-60 flex items-center`}>
+                Athletics
+              </div>
             </div>
 
             <div>
-              <FieldLabel>Weight (kg)</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="70"
-                value={form.weight}
-                onChange={(e) => updateField("weight", e.target.value)}
-              />
-            </div>
-
-            {showDominantHand && (
-              <div className="col-span-2">
-                <FieldLabel>Dominant Hand</FieldLabel>
-                <select
-                  className={inputCls}
-                  value={form.dominantHand}
-                  onChange={(e) => updateField("dominantHand", e.target.value)}
-                >
-                  <option value="">Select</option>
-                  <option value="Left">Left</option>
-                  <option value="Right">Right</option>
-                </select>
-              </div>
-            )}
-
-            <div className="col-span-2">
-              <FieldLabel>Disability Status</FieldLabel>
-              <div className="flex gap-6 mb-2">
-                {(["no", "yes"] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="disabilityStatus"
-                      value={opt}
-                      checked={form.disabilityStatus === opt}
-                      onChange={() => updateField("disabilityStatus", opt)}
-                      className="accent-orange-500"
-                    />
-                    <span className="text-white text-sm capitalize">{opt}</span>
-                  </label>
-                ))}
-              </div>
-              {form.disabilityStatus === "yes" && (
-                <select
-                  className={inputCls}
-                  value={form.disabilityCategory}
-                  onChange={(e) => updateField("disabilityCategory", e.target.value)}
-                >
-                  <option value="">Select category</option>
-                  {DISABILITY_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div className="col-span-2">
-              <FieldLabel>Blood Group (optional)</FieldLabel>
-              <select
-                className={inputCls}
-                value={form.bloodGroup}
-                onChange={(e) => updateField("bloodGroup", e.target.value)}
+              <FieldLabel>Category</FieldLabel>
+              <StyledSelect
+                value={form.category}
+                onChange={(e) => updateField("category", e.target.value)}
+                disabled={!form.primarySport}
               >
-                <option value="">Select (optional)</option>
-                {BLOOD_GROUPS.map((b) => (
-                  <option key={b} value={b}>{b}</option>
+                <option value="">Select category</option>
+                {(SPORT_CATEGORIES[form.primarySport] ?? []).map((c) => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
-              </select>
+              </StyledSelect>
             </div>
 
           </div>
         </SectionCard>
+
+        
 
         {/* Experience */}
         <SectionCard icon={<Award size={18} className="text-orange-500" />} title="Experience">
@@ -146,8 +80,7 @@ export function Step2({
 
             <div>
               <FieldLabel>Current Level</FieldLabel>
-              <select
-                className={inputCls}
+              <StyledSelect
                 value={form.currentLevel}
                 onChange={(e) => updateField("currentLevel", e.target.value)}
               >
@@ -155,7 +88,7 @@ export function Step2({
                 {CURRENT_LEVELS.map((l) => (
                   <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
-              </select>
+              </StyledSelect>
             </div>
 
             <div>
@@ -200,8 +133,7 @@ export function Step2({
 
             <div>
               <FieldLabel>Preferred Training Type (optional)</FieldLabel>
-              <select
-                className={inputCls}
+              <StyledSelect
                 value={form.preferredTrainingType}
                 onChange={(e) => updateField("preferredTrainingType", e.target.value)}
               >
@@ -209,7 +141,7 @@ export function Step2({
                 {PREFERRED_TRAINING_TYPES.map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
-              </select>
+              </StyledSelect>
             </div>
 
           </div>
