@@ -204,7 +204,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               type="file"
               accept="image/*"
               onChange={handlePhotoChange}
-              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
+              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
             />
           </div>
 
@@ -216,7 +216,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           type="button"
           onClick={onNext}
           disabled={saving}
-          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-[0_10px_30px_rgba(255,87,34,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Save & Continue

@@ -46,7 +46,7 @@ const ForAthletes = () => {
                 <div className="flex flex-col sm:flex-row justify-center items-center space-y-5 sm:space-y-0 sm:space-x-8">
                     <Link
                         href="/signup"
-                        className="px-12 py-5 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-[0_0_30px_rgba(255,87,34,0.4)] text-sm uppercase tracking-widest hover:scale-105 min-w-[240px] flex items-center justify-center"
+                        className="px-12 py-5 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-lg text-sm uppercase tracking-widest hover:scale-105 min-w-[240px] flex items-center justify-center"
                     >
                         Create Free Profile
                     </Link>

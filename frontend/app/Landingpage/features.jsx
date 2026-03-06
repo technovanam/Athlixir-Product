@@ -5,7 +5,7 @@ import { ArrowRight, BarChart2, Shield, Zap, TrendingUp } from 'lucide-react';
 
 const Features = () => {
     return (
-        <section id="features" className="py-20 md:py-28 bg-[#0A0A0A] relative text-white overflow-hidden">
+        <section id="features" className="py-20 md:py-28 bg-[#0F0F0F] relative text-white overflow-hidden">
             {/* Background Gradient Overlays */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A] via-[#FF5722]/5 to-[#0A0A0A] z-0" />
             <div className="absolute inset-0 opacity-[0.15] z-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -19,7 +19,7 @@ const Features = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="p-8 md:p-12 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 relative overflow-hidden group shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col h-full"
+                    className="p-8 md:p-12 rounded-xl bg-[#161616] backdrop-blur-xl border border-white/[0.08] relative overflow-hidden group shadow-lg flex flex-col h-full"
                 >
                     {/* Enhanced Background Graphic to fill the gap */}
                     <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-80 h-80 pointer-events-none opacity-20 group-hover:opacity-30 transition-opacity hidden lg:block">
@@ -81,7 +81,7 @@ const Features = () => {
                     </div>
 
                     <div className="mt-auto relative z-10">
-                        <button className="px-8 py-4 bg-[#FF5722] text-white font-bold rounded-full hover:bg-[#E64A19] transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
+                        <button className="px-8 py-4 bg-[#FF5722] text-white font-bold rounded-md hover:bg-[#E64A19] transition-all shadow-sm hover:shadow-md text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
                             <span>Explore Dashboard</span>
                             <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
                         </button>
@@ -110,7 +110,7 @@ const Features = () => {
                         {/* New Info Tags to fill space */}
                         <div className="flex flex-wrap gap-2 lg:gap-3">
                             {['GPS Tech', 'Bio-Metric', 'Cloud Sync', 'AI Training'].map((tag) => (
-                                <span key={tag} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] uppercase tracking-wider text-gray-500 font-bold hover:border-blue-500/40 transition-colors">
+                                <span key={tag} className="px-3 py-1.5 rounded-md bg-[#1E1E1E] border border-white/[0.08] text-[9px] uppercase tracking-wider text-gray-500 font-bold hover:border-blue-500/40 transition-colors">
                                     {tag}
                                 </span>
                             ))}
@@ -118,7 +118,7 @@ const Features = () => {
                     </div>
 
                     {/* Preview Element */}
-                    <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:flex-grow rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group min-h-[300px]">
+                    <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:flex-grow rounded-xl overflow-hidden shadow-lg border border-white/[0.08] group min-h-[300px]">
                         <img
                             src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80"
                             alt="Future Tech"
@@ -130,7 +130,7 @@ const Features = () => {
                         <motion.div
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute bottom-6 left-6 p-5 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 w-64"
+                            className="absolute bottom-6 left-6 p-5 rounded-lg bg-[#0F0F0F]/80 backdrop-blur-md border border-white/[0.08] w-64"
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] font-bold text-[#FF5722] uppercase tracking-widest">Active Metric</span>

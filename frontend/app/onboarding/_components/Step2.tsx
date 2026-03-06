@@ -118,7 +118,7 @@ export function Step2({
         <button
           type="button"
           onClick={onBack}
-          className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-2xl text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all"
+          className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all"
         >
           <ChevronLeft size={18} />
           Back
@@ -128,7 +128,7 @@ export function Step2({
           type="button"
           onClick={onComplete}
           disabled={saving}
-          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-[0_10px_30px_rgba(255,87,34,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Complete Profile
