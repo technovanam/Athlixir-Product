@@ -81,60 +81,6 @@ export function Step2({
 
         
 
-        {/* Experience */}
-        <SectionCard icon={<Award size={18} className="text-orange-500" />} title="Experience">
-          <div className="grid gap-4">
-
-            <div>
-              <FieldLabel>Years of Experience</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="e.g. 5"
-                value={form.yearsOfExperience}
-                onChange={(e) => updateField("yearsOfExperience", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <FieldLabel>Current Level</FieldLabel>
-              <StyledSelect
-                value={form.currentLevel}
-                onChange={(e) => updateField("currentLevel", e.target.value)}
-              >
-                <option value="">Select</option>
-                {CURRENT_LEVELS.map((l) => (
-                  <option key={l.value} value={l.value}>{l.label}</option>
-                ))}
-              </StyledSelect>
-            </div>
-
-            <div>
-              <FieldLabel>Current Academy (optional)</FieldLabel>
-              <input
-                type="text"
-                className={inputCls}
-                placeholder="Academy name"
-                value={form.currentAcademy}
-                onChange={(e) => updateField("currentAcademy", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <FieldLabel>Current Coach (optional)</FieldLabel>
-              <input
-                type="text"
-                className={inputCls}
-                placeholder="Coach name"
-                value={form.currentCoach}
-                onChange={(e) => updateField("currentCoach", e.target.value)}
-              />
-            </div>
-
-          </div>
-        </SectionCard>
-
         {/* Preferences */}
         <SectionCard icon={<Target size={18} className="text-orange-500" />} title="Preferences">
           <div className="grid gap-4">
