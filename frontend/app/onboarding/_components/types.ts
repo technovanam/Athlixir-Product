@@ -86,18 +86,19 @@ export interface FormState {
   dateOfBirth: string;
   gender: string;
   nationality: string;
-  primarySport: string;
-  category: string;
   state: string;
   district: string;
   cityTown: string;
-  // Step 2
+  profilePhoto: string;
   height: string;
   weight: string;
+  bloodGroup: string;
+  // Step 2
+  primarySport: string;
+  category: string;
   dominantHand: string;
   disabilityStatus: "no" | "yes";
   disabilityCategory: string;
-  bloodGroup: string;
   yearsOfExperience: string;
   currentLevel: string;
   currentAcademy: string;
@@ -108,9 +109,10 @@ export interface FormState {
 
 export const INITIAL_FORM: FormState = {
   name: "", dateOfBirth: "", gender: "", nationality: "",
-  primarySport: "", category: "", state: "", district: "", cityTown: "",
-  height: "", weight: "", dominantHand: "", disabilityStatus: "no",
-  disabilityCategory: "", bloodGroup: "", yearsOfExperience: "",
+  state: "", district: "", cityTown: "",
+  profilePhoto: "", height: "", weight: "", bloodGroup: "",
+  primarySport: "", category: "", dominantHand: "", disabilityStatus: "no",
+  disabilityCategory: "", yearsOfExperience: "",
   currentLevel: "", currentAcademy: "", currentCoach: "",
   secondarySports: "", preferredTrainingType: "",
 };

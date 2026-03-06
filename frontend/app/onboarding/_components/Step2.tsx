@@ -3,13 +3,7 @@
 import { motion } from "framer-motion";
 import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { FieldLabel, SectionCard, inputCls } from "./shared";
-import {
-  FormState,
-  CURRENT_LEVELS,
-  PREFERRED_TRAINING_TYPES,
-  BLOOD_GROUPS,
-  DISABILITY_CATEGORIES,
-} from "./types";
+import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES } from "./types";
 
 interface Step2Props {
   form: FormState;
@@ -40,30 +34,6 @@ export function Step2({
         {/* Physical & Basic */}
         <SectionCard icon={<Ruler size={18} className="text-orange-500" />} title="Physical & Basic">
           <div className="grid grid-cols-2 gap-4">
-
-            <div>
-              <FieldLabel>Height (cm)</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="175"
-                value={form.height}
-                onChange={(e) => updateField("height", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <FieldLabel>Weight (kg)</FieldLabel>
-              <input
-                type="number"
-                min="0"
-                className={inputCls}
-                placeholder="70"
-                value={form.weight}
-                onChange={(e) => updateField("weight", e.target.value)}
-              />
-            </div>
 
             {showDominantHand && (
               <div className="col-span-2">
@@ -109,20 +79,6 @@ export function Step2({
                   ))}
                 </select>
               )}
-            </div>
-
-            <div className="col-span-2">
-              <FieldLabel>Blood Group (optional)</FieldLabel>
-              <select
-                className={inputCls}
-                value={form.bloodGroup}
-                onChange={(e) => updateField("bloodGroup", e.target.value)}
-              >
-                <option value="">Select (optional)</option>
-                {BLOOD_GROUPS.map((b) => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
             </div>
 
           </div>

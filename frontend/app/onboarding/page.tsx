@@ -63,8 +63,8 @@ export default function OnboardingPage() {
       [parseInt(age, 10) >= 16, "You must be at least 16 years old."],
       [!!form.gender, "Gender is required."],
       [!!form.nationality, "Nationality is required."],
-      [!!form.primarySport, "Primary sport is required."],
-      [!!form.category, "Category is required."],
+      [!!form.height, "Height is required."],
+      [!!form.weight, "Weight is required."],
       [!!form.state, "State is required."],
       [!!form.district, "District is required."],
       [!!form.cityTown.trim(), "City / Town is required."],
@@ -139,13 +139,6 @@ export default function OnboardingPage() {
       >
         {/* Header */}
         <div className="flex flex-col items-center mb-3 shrink-0">
-          <Link href="/">
-            <svg width="36" height="36" viewBox="0 0 52 52" className="mb-2">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
-            </svg>
-          </Link>
 
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-orange-500/20 flex items-center justify-center shrink-0">
@@ -202,7 +195,6 @@ export default function OnboardingPage() {
                 key="step1"
                 form={form}
                 age={age}
-                categories={categories}
                 updateField={updateField}
                 saving={saving}
                 onNext={handleSaveStep1}
