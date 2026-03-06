@@ -10,7 +10,7 @@ export const SPORTS_LIST = [
 ] as const;
 
 export const SPORT_CATEGORIES: Record<string, string[]> = {
-  Athletics: ["Sprint", "Middle Distance", "Long Distance", "Field Events", "Combined Events"],
+  Athletics: ["Running", "Hurdles", "Jumping"],
   Swimming: ["Freestyle", "Backstroke", "Breaststroke", "Butterfly", "Individual Medley"],
   Cricket: ["Batting", "Bowling", "Wicket Keeping", "All-Rounder"],
   Football: ["Goalkeeper", "Defender", "Midfielder", "Forward"],
@@ -111,7 +111,7 @@ export const INITIAL_FORM: FormState = {
   name: "", dateOfBirth: "", gender: "", nationality: "Indian",
   state: "", district: "", cityTown: "",
   profilePhoto: "", height: "", weight: "", bloodGroup: "",
-  primarySport: "", category: "", dominantHand: "", disabilityStatus: "no",
+  primarySport: "Athletics", category: "", dominantHand: "", disabilityStatus: "no",
   disabilityCategory: "", yearsOfExperience: "",
   currentLevel: "", currentAcademy: "", currentCoach: "",
   secondarySports: "", preferredTrainingType: "",

@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
 import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
-import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES } from "./types";
+import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES } from "./types";
 
 interface Step2Props {
   form: FormState;
@@ -31,56 +31,36 @@ export function Step2({
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-        {/* Physical & Basic */}
-        <SectionCard icon={<Ruler size={18} className="text-orange-500" />} title="Physical & Basic">
-          <div className="grid grid-cols-2 gap-4">
+        {/* Specialization */}
+        <SectionCard icon={<Star size={18} className="text-orange-500" />} title="Specialization">
+          <p className="text-gray-500 text-xs mb-3">Defines the athlete&apos;s specialization.</p>
+          <div className="grid gap-4">
 
-            {showDominantHand && (
-              <div className="col-span-2">
-                <FieldLabel>Dominant Hand</FieldLabel>
-                <StyledSelect
-                  value={form.dominantHand}
-                  onChange={(e) => updateField("dominantHand", e.target.value)}
-                >
-                  <option value="">Select</option>
-                  <option value="Left">Left</option>
-                  <option value="Right">Right</option>
-                </StyledSelect>
+            <div>
+              <FieldLabel>Primary Sport</FieldLabel>
+              <div className={`${inputCls} cursor-not-allowed opacity-60 flex items-center`}>
+                Athletics
               </div>
-            )}
+            </div>
 
-            <div className="col-span-2">
-              <FieldLabel>Disability Status</FieldLabel>
-              <div className="flex gap-6 mb-2">
-                {(["no", "yes"] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="disabilityStatus"
-                      value={opt}
-                      checked={form.disabilityStatus === opt}
-                      onChange={() => updateField("disabilityStatus", opt)}
-                      className="accent-orange-500"
-                    />
-                    <span className="text-white text-sm capitalize">{opt}</span>
-                  </label>
+            <div>
+              <FieldLabel>Category</FieldLabel>
+              <StyledSelect
+                value={form.category}
+                onChange={(e) => updateField("category", e.target.value)}
+                disabled={!form.primarySport}
+              >
+                <option value="">Select category</option>
+                {(SPORT_CATEGORIES[form.primarySport] ?? []).map((c) => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
-              </div>
-              {form.disabilityStatus === "yes" && (
-                <StyledSelect
-                  value={form.disabilityCategory}
-                  onChange={(e) => updateField("disabilityCategory", e.target.value)}
-                >
-                  <option value="">Select category</option>
-                  {DISABILITY_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </StyledSelect>
-              )}
+              </StyledSelect>
             </div>
 
           </div>
         </SectionCard>
+
+        
 
         {/* Experience */}
         <SectionCard icon={<Award size={18} className="text-orange-500" />} title="Experience">
