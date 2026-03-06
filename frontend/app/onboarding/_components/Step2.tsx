@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
 import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
-import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES } from "./types";
+import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES, SPORTS_LIST } from "./types";
 
 interface Step2Props {
   form: FormState;
@@ -38,9 +38,15 @@ export function Step2({
 
             <div>
               <FieldLabel>Primary Sport</FieldLabel>
-              <div className={`${inputCls} cursor-not-allowed opacity-60 flex items-center`}>
-                Athletics
-              </div>
+              <StyledSelect
+                value={form.primarySport}
+                onChange={(e) => updateField("primarySport", e.target.value)}
+              >
+                <option value="">Select sport</option>
+                {SPORTS_LIST.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </StyledSelect>
             </div>
 
             <div>
