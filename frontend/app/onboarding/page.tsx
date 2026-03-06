@@ -16,7 +16,10 @@ import {
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [form, setForm] = useState<FormState>(() => ({
+    ...INITIAL_FORM,
+    name: (typeof window !== "undefined" && localStorage.getItem("athlixir_signup_name")) || "",
+  }));
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -62,7 +65,6 @@ export default function OnboardingPage() {
       [!!form.dateOfBirth, "Date of birth is required."],
       [parseInt(age, 10) >= 16, "Age must be at least 16."],
       [!!form.gender, "Gender is required."],
-      [!!form.nationality, "Nationality is required."],
       [!!form.height, "Height is required."],
       [!!form.weight, "Weight is required."],
       [!!form.state, "State is required."],

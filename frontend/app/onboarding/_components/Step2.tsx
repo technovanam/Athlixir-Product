@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { FieldLabel, SectionCard, inputCls } from "./shared";
+import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
 import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES } from "./types";
 
 interface Step2Props {
@@ -38,15 +38,14 @@ export function Step2({
             {showDominantHand && (
               <div className="col-span-2">
                 <FieldLabel>Dominant Hand</FieldLabel>
-                <select
-                  className={inputCls}
+                <StyledSelect
                   value={form.dominantHand}
                   onChange={(e) => updateField("dominantHand", e.target.value)}
                 >
                   <option value="">Select</option>
                   <option value="Left">Left</option>
                   <option value="Right">Right</option>
-                </select>
+                </StyledSelect>
               </div>
             )}
 
@@ -68,8 +67,7 @@ export function Step2({
                 ))}
               </div>
               {form.disabilityStatus === "yes" && (
-                <select
-                  className={inputCls}
+                <StyledSelect
                   value={form.disabilityCategory}
                   onChange={(e) => updateField("disabilityCategory", e.target.value)}
                 >
@@ -77,7 +75,7 @@ export function Step2({
                   {DISABILITY_CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
-                </select>
+                </StyledSelect>
               )}
             </div>
 
@@ -102,8 +100,7 @@ export function Step2({
 
             <div>
               <FieldLabel>Current Level</FieldLabel>
-              <select
-                className={inputCls}
+              <StyledSelect
                 value={form.currentLevel}
                 onChange={(e) => updateField("currentLevel", e.target.value)}
               >
@@ -111,7 +108,7 @@ export function Step2({
                 {CURRENT_LEVELS.map((l) => (
                   <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
-              </select>
+              </StyledSelect>
             </div>
 
             <div>
@@ -156,8 +153,7 @@ export function Step2({
 
             <div>
               <FieldLabel>Preferred Training Type (optional)</FieldLabel>
-              <select
-                className={inputCls}
+              <StyledSelect
                 value={form.preferredTrainingType}
                 onChange={(e) => updateField("preferredTrainingType", e.target.value)}
               >
@@ -165,7 +161,7 @@ export function Step2({
                 {PREFERRED_TRAINING_TYPES.map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
-              </select>
+              </StyledSelect>
             </div>
 
           </div>

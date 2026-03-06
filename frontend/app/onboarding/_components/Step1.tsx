@@ -8,7 +8,7 @@ import {
   Lock, User, ArrowRight, ShieldCheck, Loader2,
   Trophy, Users, Target, Phone, CheckCircle2, X, ChevronRight,
 } from "lucide-react";
-import { FieldLabel, SectionCard, inputCls } from "./shared";
+import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
 import { FormState, BLOOD_GROUPS, NATIONALITIES, INDIAN_STATES } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -127,6 +127,8 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Persist name so onboarding can auto-fill it
+      localStorage.setItem("athlixir_signup_name", formData.fullName);
       if (formData.role === "coach") {
         router.push("/coach/dashboard");
       } else if (formData.role === "user") {
@@ -585,8 +587,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           {/* Gender */}
           <div>
             <FieldLabel>Gender</FieldLabel>
-            <select
-              className={inputCls}
+            <StyledSelect
               value={form.gender}
               onChange={(e) => updateField("gender", e.target.value)}
             >
@@ -594,22 +595,16 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
-            </select>
+            </StyledSelect>
           </div>
 
           {/* Nationality */}
           <div>
             <FieldLabel>Nationality</FieldLabel>
-            <select
-              className={inputCls}
-              value={form.nationality}
-              onChange={(e) => updateField("nationality", e.target.value)}
-            >
-              <option value="">Select</option>
-              {NATIONALITIES.map((n) => (
-                <option key={n} value={n}>{n}</option>
-              ))}
-            </select>
+            <div className={`${inputCls} cursor-not-allowed opacity-60 flex items-center gap-2`}>
+              <span>🇮🇳</span>
+              <span>Indian</span>
+            </div>
           </div>
 
           {/* Height */}
@@ -641,8 +636,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           {/* Blood Group */}
           <div>
             <FieldLabel>Blood Group</FieldLabel>
-            <select
-              className={inputCls}
+            <StyledSelect
               value={form.bloodGroup}
               onChange={(e) => updateField("bloodGroup", e.target.value)}
             >
@@ -650,14 +644,13 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               {BLOOD_GROUPS.map((b) => (
                 <option key={b} value={b}>{b}</option>
               ))}
-            </select>
+            </StyledSelect>
           </div>
 
           {/* State */}
           <div>
             <FieldLabel>State</FieldLabel>
-            <select
-              className={inputCls}
+            <StyledSelect
               value={form.state}
               onChange={(e) => updateField("state", e.target.value)}
             >
@@ -665,7 +658,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               {INDIAN_STATES.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
-            </select>
+            </StyledSelect>
           </div>
 
           {/* District */}

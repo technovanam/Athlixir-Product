@@ -108,7 +108,7 @@ export interface FormState {
 }
 
 export const INITIAL_FORM: FormState = {
-  name: "", dateOfBirth: "", gender: "", nationality: "",
+  name: "", dateOfBirth: "", gender: "", nationality: "Indian",
   state: "", district: "", cityTown: "",
   profilePhoto: "", height: "", weight: "", bloodGroup: "",
   primarySport: "", category: "", dominantHand: "", disabilityStatus: "no",
