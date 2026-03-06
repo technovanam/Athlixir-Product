@@ -31,12 +31,11 @@ export const SPORTS_REQUIRING_DOMINANT_HAND = [
 ];
 
 export const CURRENT_LEVELS = [
-  { value: "school", label: "School Level" },
-  { value: "district", label: "District Level" },
-  { value: "state", label: "State Level" },
-  { value: "national", label: "National Level" },
-  { value: "international", label: "International Level" },
-  { value: "professional", label: "Professional" },
+  { value: "school", label: "School" },
+  { value: "district", label: "District" },
+  { value: "state", label: "State" },
+  { value: "national", label: "National" },
+  { value: "international", label: "International" },
 ];
 
 export const PREFERRED_TRAINING_TYPES = [
