@@ -26,6 +26,3 @@ export const SCOUTING_STATS = {
   manualProfile: 12,
   athlixirPowered: 94,
 } as const;
-
-// Re-export design tokens for convenience
-export { COLORS, TYPOGRAPHY, SPACING, COMPONENT_SPACING } from "./design-tokens";
