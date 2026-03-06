@@ -31,7 +31,7 @@ export default function Header() {
       setIsScrolled(window.scrollY > 20);
       
       // Detect active section based on scroll position
-      const sections = NAV_LINKS.map(link => link.href.replace("#", ""));
+      const sections = NAV_LINKS.filter(link => link.href.startsWith('#')).map(link => link.href.replace("#", ""));
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section) {
@@ -84,11 +84,19 @@ export default function Header() {
   // Smooth scroll handler
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const targetId = href.replace("#", "");
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setActiveSection(href);
+    
+    // Check if it's a route or hash
+    if (href.startsWith('/')) {
+      // Navigate to route
+      window.location.href = href;
+    } else {
+      // Scroll to section
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        setActiveSection(href);
+      }
     }
   };
 

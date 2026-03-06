@@ -96,7 +96,7 @@ export default function OnboardingPage() {
     try {
       // TODO: wire up your save/API call here
       await new Promise((r) => setTimeout(r, 1000));
-      console.log("Onboarding complete", form);
+      window.location.assign("/terms");
     } catch {
       setError("Failed to complete. Please try again.");
     } finally {
