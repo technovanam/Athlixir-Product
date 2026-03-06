@@ -43,7 +43,7 @@ export default function OnboardingPage() {
     if (key === "dateOfBirth" && value) {
       const ageNum = parseInt(calculateAge(value as string), 10);
       if (!isNaN(ageNum) && ageNum < 16) {
-        setError("You must be at least 16 years old.");
+        setError("Age must be at least 16.");
         return;
       }
     }
@@ -60,7 +60,7 @@ export default function OnboardingPage() {
     const checks: [boolean, string][] = [
       [!!form.name.trim(), "Name is required."],
       [!!form.dateOfBirth, "Date of birth is required."],
-      [parseInt(age, 10) >= 16, "You must be at least 16 years old."],
+      [parseInt(age, 10) >= 16, "Age must be at least 16."],
       [!!form.gender, "Gender is required."],
       [!!form.nationality, "Nationality is required."],
       [!!form.height, "Height is required."],

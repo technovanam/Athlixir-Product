@@ -550,7 +550,23 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               type="date"
               className={inputCls}
               value={form.dateOfBirth}
-              onChange={(e) => updateField("dateOfBirth", e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!val) {
+                  updateField("dateOfBirth", val);
+                  return;
+                }
+                const [yearStr, month, day] = val.split("-");
+                if (!yearStr) return;
+                // Clamp year to 4 digits and not beyond current year
+                const currentYear = new Date().getFullYear();
+                let year = yearStr.slice(0, 4);
+                if (year.length === 4 && parseInt(year, 10) > currentYear) {
+                  year = String(currentYear);
+                }
+                updateField("dateOfBirth", `${year}-${month ?? ""}-${day ?? ""}`);
+              }}
             />
           </div>
 
@@ -600,7 +616,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           <div>
             <FieldLabel>Height (cm)</FieldLabel>
             <input
-              type="number"
+             
               min="0"
               className={inputCls}
               placeholder="175"
@@ -613,7 +629,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           <div>
             <FieldLabel>Weight (kg)</FieldLabel>
             <input
-              type="number"
+              
               min="0"
               className={inputCls}
               placeholder="70"
