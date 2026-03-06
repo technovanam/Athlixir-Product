@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Mail, Lock, User, ArrowRight, ShieldCheck, Loader2,
-  Trophy, Users, Target,
+  Lock, User, ArrowRight, ShieldCheck, Loader2,
+  Trophy, Users, Target, Phone, CheckCircle2, KeyRound,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -17,10 +17,11 @@ type Role = "athlete" | "coach" | "user";
 
 interface SignupFormData {
   fullName: string;
-  email: string;
+  phone: string;
   password: string;
   confirmPassword: string;
   role: Role;
+  otp: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -30,7 +31,7 @@ interface SignupFormData {
 const ROLES: { id: Role; label: string; icon: React.ElementType }[] = [
   { id: "athlete", label: "Athlete", icon: Trophy },
   { id: "coach",   label: "Coach",   icon: Target },
-  { id: "user",    label: "Fan",     icon: Users  },
+  { id: "user",    label: "User",     icon: Users  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -49,14 +50,19 @@ export default function SignupPage() {
 
   const [formData, setFormData] = useState<SignupFormData>({
     fullName: "",
-    email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     role: "athlete",
+    otp: "",
   });
 
-  const [error, setError]     = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError]           = useState<string>("");
+  const [loading, setLoading]       = useState<boolean>(false);
+  const [otpSent, setOtpSent]       = useState<boolean>(false);
+  const [otpLoading, setOtpLoading] = useState<boolean>(false);
+  const [phoneVerified, setPhoneVerified] = useState<boolean>(false);
+  const [otpError, setOtpError]     = useState<string>("");
 
   // Auto-dismiss error after 5 s
   useEffect(() => {
@@ -68,9 +74,45 @@ export default function SignupPage() {
   const set = <K extends keyof SignupFormData>(key: K, value: SignupFormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
+  const handleSendOtp = async () => {
+    if (!formData.phone) return setError("Please enter your phone number first.");
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      // TODO: replace with real OTP send API call
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      setOtpSent(true);
+      set("otp", "");
+    } catch {
+      setOtpError("Failed to send OTP. Try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!formData.otp) return setOtpError("Enter the OTP sent to your phone.");
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      // TODO: replace with real OTP verify API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPhoneVerified(true);
+      setOtpSent(false);
+    } catch {
+      setOtpError("Invalid OTP. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+
+    if (!phoneVerified) {
+      return setError("Please verify your phone number before continuing.");
+    }
 
     if (formData.password !== formData.confirmPassword) {
       return setError("Passwords do not match");
@@ -137,13 +179,7 @@ export default function SignupPage() {
       >
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
-          <Link href="/">
-            <svg width="44" height="44" viewBox="0 0 52 52" className="mb-3 scale-125">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
-            </svg>
-          </Link>
+          
 
           <h1 className="text-4xl font-black text-white mb-2 uppercase text-center leading-tight tracking-[0.05em]">
             Join the Ecosystem
@@ -223,26 +259,105 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Phone Number + inline Verify */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                  Secure Email Address
+                  Phone Number
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                    <Mail size={18} />
+                    <Phone size={18} />
                   </div>
                   <input
-                    type="email"
-                    placeholder="name@email.com"
-                    className={inputCls}
-                    value={formData.email}
-                    onChange={(e) => set("email", e.target.value)}
+                    type="tel"
+                    placeholder="+1 000 000 0000"
+                    className={`${inputCls} pr-28`}
+                    value={formData.phone}
+                    onChange={(e) => {
+                      set("phone", e.target.value);
+                      setPhoneVerified(false);
+                      setOtpSent(false);
+                      set("otp", "");
+                    }}
                     required
-                    disabled={loading}
+                    disabled={loading || phoneVerified}
                     suppressHydrationWarning
                   />
+                  {/* Verify / Verified button */}
+                  <div className="absolute inset-y-0 right-3 flex items-center">
+                    {phoneVerified ? (
+                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest pr-1">
+                        <CheckCircle2 size={16} className="shrink-0" />
+                        Verified
+                      </span>
+                    ) : formData.phone.replace(/\D/g, "").length >= 10 ? (
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        disabled={otpLoading || loading}
+                        suppressHydrationWarning
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                      >
+                        {otpLoading && !otpSent ? (
+                          <Loader2 size={14} className="animate-spin" />
+                        ) : otpSent ? "Resend" : "Verify"}
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
+
+                {/* OTP row */}
+                <AnimatePresence>
+                  {otpSent && !phoneVerified && (
+                    <motion.div
+                      key="otp-row"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-2 space-y-1.5">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                          OTP – Check Your Phone
+                        </label>
+                        <div className="flex gap-3">
+                          <div className="relative group flex-1">
+                            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
+                              <KeyRound size={18} />
+                            </div>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              maxLength={6}
+                              placeholder="Enter 6-digit OTP"
+                              className={inputCls}
+                              value={formData.otp}
+                              onChange={(e) => {
+                                set("otp", e.target.value.replace(/\D/g, ""));
+                                setOtpError("");
+                              }}
+                              disabled={otpLoading || loading}
+                              suppressHydrationWarning
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleVerifyOtp}
+                            disabled={otpLoading || loading || formData.otp.length < 6}
+                            suppressHydrationWarning
+                            className="px-5 py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all shrink-0"
+                          >
+                            {otpLoading ? <Loader2 size={16} className="animate-spin" /> : "Confirm"}
+                          </button>
+                        </div>
+                        {otpError && (
+                          <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest ml-1">{otpError}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Password + Confirm */}
