@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { Badge, Button } from "@/components/ui";
+import { Badge } from "@/components/ui";
 import { Target, TrendingUp, Users } from "lucide-react";
 
 /**
@@ -70,20 +69,13 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div className="pt-4">
-              <Link href="#features">
-                <Button variant="primary" size="md">
-                  LEARN MORE
-                </Button>
-              </Link>
-            </div>
+
           </div>
 
           {/* Right Content - Image Cards */}
           <div className="relative h-[580px] w-[520px] hidden lg:block flex-shrink-0">
             {/* Training Card - Large, positioned left */}
-            <div className="absolute top-0 left-[20px] w-[280px] h-[420px] rounded-2xl overflow-hidden animate-float shadow-2xl z-10">
+            <div className="absolute top-0 left-[20px] w-[280px] h-[420px] rounded-xl overflow-hidden animate-float shadow-lg z-10">
               <Image
                 src="/images/training.jpg"
                 alt="Training"
@@ -103,7 +95,7 @@ export default function AboutSection() {
             </div>
 
             {/* Community Card - Far Left, Overlapping Training Card */}
-            <div className="absolute left-[-200px] top-[250px] bg-[#1a1a1a] backdrop-blur-sm rounded-xl p-5 w-[180px] border border-white/10 animate-float-horizontal shadow-xl z-20">
+            <div className="absolute left-[-200px] top-[250px] bg-[#1a1a1a] backdrop-blur-sm rounded-md p-5 w-[180px] border border-white/[0.08] animate-float-horizontal shadow-lg z-20">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="w-5 h-5 text-[#FF5722]" />
                 <span className="text-[11px] font-semibold tracking-wider text-white/80 uppercase">
@@ -120,7 +112,7 @@ export default function AboutSection() {
             </div>
 
             {/* Ecosystem Card - Bottom Right, Overlapping */}
-            <div className="absolute top-[260px] right-0 w-[260px] h-[310px] rounded-2xl overflow-hidden animate-float-alt shadow-2xl z-10">
+            <div className="absolute top-[260px] right-0 w-[260px] h-[310px] rounded-xl overflow-hidden animate-float-alt shadow-lg z-10">
               <Image
                 src="/images/ecosystem.jpg"
                 alt="Ecosystem"
