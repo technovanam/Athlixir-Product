@@ -1,12 +1,12 @@
 ﻿"use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, useRef, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Mail, Lock, User, ArrowRight, ShieldCheck, Loader2,
-  Trophy, Users, Target,
+  Lock, User, ArrowRight, ShieldCheck, Loader2,
+  Trophy, Users, Target, Phone, CheckCircle2, X,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -17,10 +17,11 @@ type Role = "athlete" | "coach" | "user";
 
 interface SignupFormData {
   fullName: string;
-  email: string;
+  phone: string;
   password: string;
   confirmPassword: string;
   role: Role;
+  otp: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -30,7 +31,7 @@ interface SignupFormData {
 const ROLES: { id: Role; label: string; icon: React.ElementType }[] = [
   { id: "athlete", label: "Athlete", icon: Trophy },
   { id: "coach",   label: "Coach",   icon: Target },
-  { id: "user",    label: "Fan",     icon: Users  },
+  { id: "user",    label: "User",     icon: Users  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -49,14 +50,22 @@ export default function SignupPage() {
 
   const [formData, setFormData] = useState<SignupFormData>({
     fullName: "",
-    email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     role: "athlete",
+    otp: "",
   });
 
-  const [error, setError]     = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError]           = useState<string>("");
+  const [loading, setLoading]       = useState<boolean>(false);
+  const [otpSent, setOtpSent]       = useState<boolean>(false);
+  const [otpLoading, setOtpLoading] = useState<boolean>(false);
+  const [phoneVerified, setPhoneVerified] = useState<boolean>(false);
+  const [otpError, setOtpError]     = useState<string>("");
+  const [showOtpModal, setShowOtpModal] = useState<boolean>(false);
+  const [otpDigits, setOtpDigits]   = useState<string[]>(["" ,"", "", ""]);
+  const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
   // Auto-dismiss error after 5 s
   useEffect(() => {
@@ -68,9 +77,49 @@ export default function SignupPage() {
   const set = <K extends keyof SignupFormData>(key: K, value: SignupFormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
+  const handleSendOtp = async () => {
+    if (!formData.phone) return setError("Please enter your phone number first.");
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      // TODO: replace with real OTP send API call
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      setOtpSent(true);
+      setOtpDigits(["", "", "", ""]);
+      set("otp", "");
+      setShowOtpModal(true);
+    } catch {
+      setOtpError("Failed to send OTP. Try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const otp = otpDigits.join("");
+    if (otp.length < 4) return setOtpError("Enter all 4 digits.");
+    setOtpLoading(true);
+    setOtpError("");
+    try {
+      // TODO: replace with real OTP verify API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPhoneVerified(true);
+      setOtpSent(false);
+      setShowOtpModal(false);
+    } catch {
+      setOtpError("Invalid OTP. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+
+    if (!phoneVerified) {
+      return setError("Please verify your phone number before continuing.");
+    }
 
     if (formData.password !== formData.confirmPassword) {
       return setError("Passwords do not match");
@@ -101,6 +150,114 @@ export default function SignupPage() {
 
   return (
     <div className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#050505]">
+
+      {/* OTP Modal */}
+      <AnimatePresence>
+        {showOtpModal && (
+          <motion.div
+            key="otp-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-sm bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+            >
+              {/* Close */}
+              <button
+                type="button"
+                onClick={() => { setShowOtpModal(false); setOtpError(""); }}
+                className="absolute top-5 right-5 text-gray-500 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                  <Phone size={26} className="text-orange-500" />
+                </div>
+              </div>
+
+              <h2 className="text-white font-black text-xl uppercase tracking-widest text-center mb-1">Verify Phone</h2>
+              <p className="text-gray-500 text-[11px] text-center uppercase tracking-widest mb-6">
+                Enter the 4-digit OTP sent to<br />
+                <span className="text-orange-400 font-bold">+91 {formData.phone}</span>
+              </p>
+
+              {/* 4 digit boxes */}
+              <div className="flex justify-center gap-3 mb-4">
+                {otpDigits.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={otpRefs[i]}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "");
+                      const next = [...otpDigits];
+                      next[i] = val;
+                      setOtpDigits(next);
+                      setOtpError("");
+                      if (val && i < 3) otpRefs[i + 1].current?.focus();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace" && !otpDigits[i] && i > 0) {
+                        otpRefs[i - 1].current?.focus();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
+                      const next = ["", "", "", ""];
+                      pasted.split("").forEach((ch, idx) => { if (idx < 4) next[idx] = ch; });
+                      setOtpDigits(next);
+                      otpRefs[Math.min(pasted.length, 3)].current?.focus();
+                    }}
+                    disabled={otpLoading}
+                    suppressHydrationWarning
+                    className="w-14 h-14 text-center text-2xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-orange-500 focus:bg-white/[0.08] transition-all"
+                  />
+                ))}
+              </div>
+
+              {otpError && (
+                <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest text-center mb-4">{otpError}</p>
+              )}
+
+              {/* Verify button */}
+              <button
+                type="button"
+                onClick={handleVerifyOtp}
+                disabled={otpLoading || otpDigits.join("").length < 4}
+                suppressHydrationWarning
+                className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2"
+              >
+                {otpLoading ? <Loader2 size={18} className="animate-spin" /> : "Verify OTP"}
+              </button>
+
+              <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest mt-4">
+                Didn&apos;t receive?{" "}
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpLoading}
+                  className="text-orange-500 font-black hover:text-orange-400 transition-colors"
+                >
+                  Resend
+                </button>
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Background */}
       <div className="absolute inset-0 -z-10">
@@ -137,13 +294,7 @@ export default function SignupPage() {
       >
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
-          <Link href="/">
-            <svg width="44" height="44" viewBox="0 0 52 52" className="mb-3 scale-125">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
-            </svg>
-          </Link>
+          
 
           <h1 className="text-4xl font-black text-white mb-2 uppercase text-center leading-tight tracking-[0.05em]">
             Join the Ecosystem
@@ -223,26 +374,63 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Phone Number + inline Verify */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                  Secure Email Address
+                  Phone Number
                 </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                    <Mail size={18} />
+                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/[0.08] transition-all overflow-hidden">
+                  {/* Phone icon */}
+                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0 border-r border-white/10">
+                    <Phone size={18} />
                   </div>
+                  {/* Fixed +91 prefix */}
+                  <span className="pl-4 pr-1 py-4 text-gray-700 text-base select-none shrink-0">
+                    +91
+                  </span>
+                  {/* Digits input */}
                   <input
-                    type="email"
-                    placeholder="name@email.com"
-                    className={inputCls}
-                    value={formData.email}
-                    onChange={(e) => set("email", e.target.value)}
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    placeholder="XXXXX XXXXX"
+                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
+                    value={formData.phone}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      set("phone", digits);
+                      setPhoneVerified(false);
+                      setOtpSent(false);
+                      set("otp", "");
+                    }}
                     required
-                    disabled={loading}
+                    disabled={loading || phoneVerified}
                     suppressHydrationWarning
                   />
+                  {/* Verify / Verified button */}
+                  <div className="pr-3 flex items-center shrink-0">
+                    {phoneVerified ? (
+                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                        <CheckCircle2 size={16} className="shrink-0" />
+                        Verified
+                      </span>
+                    ) : formData.phone.length >= 10 ? (
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        disabled={otpLoading || loading}
+                        suppressHydrationWarning
+                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                      >
+                        {otpLoading && !otpSent ? (
+                          <Loader2 size={14} className="animate-spin" />
+                        ) : otpSent ? "Resend" : "Verify"}
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
+
+                {/* OTP row removed — handled by modal */}
               </div>
 
               {/* Password + Confirm */}
