@@ -73,8 +73,6 @@ const Contact = () => {
                                     <li><Link href="#" className="hover:text-white transition-colors block py-0.5">YouTube</Link></li>
                                 </ul>
                             </div>
-<<<<<<< HEAD
-=======
 
                             {/* Contact Form */}
                             <form className="space-y-4">
@@ -104,7 +102,6 @@ const Contact = () => {
                                     <ArrowRight size={20} />
                                 </button>
                             </form>
->>>>>>> 0027ef71d71ba168e4af98dcc214890d9616d586
                         </div>
 
                         {/* Spacer prevents text from overflowing into background Avatar space */}

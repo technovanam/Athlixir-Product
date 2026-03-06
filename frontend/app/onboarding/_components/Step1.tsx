@@ -51,6 +51,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               value={form.name}
               readOnly
               tabIndex={-1}
+              suppressHydrationWarning
             />
           </div>
 
@@ -64,6 +65,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               className={inputCls}
               value={form.dateOfBirth}
               max={new Date().toISOString().split("T")[0]}
+              suppressHydrationWarning
               onChange={(e) => {
                 const val = e.target.value;
                 if (!val) {
@@ -92,6 +94,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               value={age}
               readOnly
               placeholder="—"
+              suppressHydrationWarning
             />
           </div>
 
@@ -128,6 +131,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               placeholder="175"
               value={form.height}
               onChange={(e) => updateField("height", e.target.value)}
+              suppressHydrationWarning
             />
           </div>
 
@@ -141,6 +145,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               placeholder="70"
               value={form.weight}
               onChange={(e) => updateField("weight", e.target.value)}
+              suppressHydrationWarning
             />
           </div>
 
@@ -181,6 +186,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               placeholder="District"
               value={form.district}
               onChange={(e) => updateField("district", e.target.value)}
+              suppressHydrationWarning
             />
           </div>
 
@@ -193,6 +199,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               placeholder="City or town"
               value={form.cityTown}
               onChange={(e) => updateField("cityTown", e.target.value)}
+              suppressHydrationWarning
             />
           </div>
 
@@ -205,6 +212,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               accept="image/*"
               onChange={handlePhotoChange}
               className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
+              suppressHydrationWarning
             />
           </div>
 
@@ -217,6 +225,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           onClick={onNext}
           disabled={saving}
           className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          suppressHydrationWarning
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Save & Continue
