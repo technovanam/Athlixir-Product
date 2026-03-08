@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout";
 import { HeroSection, AboutSection } from "@/components/sections/home";
-import { Features, Research, ForAthletes, Contact } from "./Landingpage";
+import { Features, ExploreCarousel, Research, ForAthletes, SDGImpact, FinalCTA, Contact } from "./Landingpage";
 
 /**
  * Home Page
@@ -14,8 +14,11 @@ export default function HomePage() {
         <HeroSection />
         <AboutSection />
         <Features />
+        <ExploreCarousel />
         <Research />
         <ForAthletes />
+        <SDGImpact />
+        <FinalCTA />
         <Contact />
       </main>
     </>
