@@ -81,7 +81,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-black py-10">
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background py-10">
 
       {/* Background */}
       <div className="absolute inset-0 z-0">
@@ -102,9 +102,9 @@ export default function ResetPasswordPage() {
       >
         <Link
           href="/login"
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
+          className="flex items-center gap-2 text-secondary hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
         >
-          <ArrowRight className="rotate-180 text-orange-500" size={18} />
+          <ArrowRight className="rotate-180 text-primary" size={18} />
           Back to Portal
         </Link>
       </motion.div>
@@ -119,17 +119,17 @@ export default function ResetPasswordPage() {
         <div className="flex flex-col items-center mb-10">
           <Link href="/" className="mb-4">
             <svg width="52" height="52" viewBox="0 0 52 52">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
+              <polygon points="26,4 6,48 14,48 26,18" fill="#FF5722" />
+              <polygon points="26,4 46,48 38,48 26,18" fill="#E64A19" />
+              <rect x="14" y="30" width="24" height="5" rx="1" fill="#FF5722" />
             </svg>
           </Link>
           <h1 className="text-4xl font-black text-white mb-2 tracking-tight uppercase">
             Reset Access
           </h1>
-          <p className="text-gray-400 text-center text-[10px] font-black uppercase tracking-[0.3em]">
+          <p className="text-secondary text-center text-[10px] font-black uppercase tracking-[0.3em]">
             Recover your{" "}
-            <span className="text-orange-500 font-bold">Secure Athlete Key</span>
+            <span className="text-primary font-bold">Secure Athlete Key</span>
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export default function ResetPasswordPage() {
                 transition={{ duration: 0.25, ease: "easeOut" }}
                 className="mb-6 overflow-hidden"
               >
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs font-bold uppercase tracking-widest text-center">
+                <div className="p-4 bg-error/10 border border-error/20 rounded-xl text-error text-xs font-bold uppercase tracking-widest text-center">
                   {error}
                 </div>
               </motion.div>
@@ -156,20 +156,20 @@ export default function ResetPasswordPage() {
           {step === "phone" && (
             <div className="space-y-6">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted ml-1">
                   Phone Number
                 </label>
-                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/8 transition-all overflow-hidden">
-                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0 border-r border-white/10">
+                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-primary/50 focus-within:bg-white/8 transition-all overflow-hidden">
+                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-muted group-focus-within:text-primary transition-colors shrink-0 border-r border-white/10">
                     <Phone size={18} />
                   </div>
-                  <span className="pl-4 pr-1 py-4 text-gray-700 text-base select-none shrink-0">+91</span>
+                  <span className="pl-4 pr-1 py-4 text-muted text-base select-none shrink-0">+91</span>
                   <input
                     type="tel"
                     inputMode="numeric"
                     maxLength={10}
                     placeholder="XXXXX XXXXX"
-                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
+                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-muted focus:outline-none text-base"
                     value={phone}
                     onChange={(e) => {
                       setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
@@ -185,7 +185,7 @@ export default function ResetPasswordPage() {
                 type="button"
                 onClick={handleSendOtp}
                 disabled={loading || phone.length < 10}
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 group uppercase tracking-widest text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-[0_10px_30px_rgba(255,87,34,0.25)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.4)] flex items-center justify-center gap-3 group uppercase tracking-widest text-sm disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -209,13 +209,13 @@ export default function ResetPasswordPage() {
             >
               {/* Phone (locked) */}
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-6 py-4">
-                <Phone size={18} className="text-orange-500 shrink-0" />
-                <span className="text-gray-400 text-sm font-bold">+91 {phone}</span>
+                <Phone size={18} className="text-primary shrink-0" />
+                <span className="text-secondary text-sm font-bold">+91 {phone}</span>
               </div>
 
               {/* OTP label */}
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4 text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-4 text-center">
                   Enter 6-digit OTP sent to your number
                 </p>
                 <div className="flex justify-center gap-3">
@@ -250,7 +250,7 @@ export default function ResetPasswordPage() {
                       }}
                       disabled={loading}
                       suppressHydrationWarning
-                      className="w-11 h-11 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-orange-500 focus:bg-white/8 transition-all"
+                      className="w-11 h-11 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary focus:bg-white/8 transition-all"
                     />
                   ))}
                 </div>
@@ -261,19 +261,19 @@ export default function ResetPasswordPage() {
                 onClick={handleVerifyOtp}
                 disabled={loading || otpDigits.join("").length < 6}
                 suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 text-sm"
+                className="w-full py-4 bg-primary hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 text-sm"
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : (
                   <>Verify OTP <CheckCircle2 size={18} /></>
                 )}
               </button>
 
-              <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest">
+              <p className="text-center text-disabled text-[10px] uppercase tracking-widest">
                 Didn&apos;t receive?{" "}
                 <button
                   type="button"
                   onClick={() => { setStep("phone"); setError(""); }}
-                  className="text-orange-500 font-black hover:text-orange-400 transition-colors"
+                  className="text-primary font-black hover:text-primary-hover transition-colors"
                 >
                   Change Number
                 </button>
@@ -282,7 +282,7 @@ export default function ResetPasswordPage() {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={loading}
-                  className="text-orange-500 font-black hover:text-orange-400 transition-colors disabled:opacity-40"
+                  className="text-primary font-black hover:text-primary-hover transition-colors disabled:opacity-40"
                 >
                   Resend
                 </button>
@@ -298,9 +298,9 @@ export default function ResetPasswordPage() {
               transition={{ duration: 0.35 }}
             >
               {/* Verified badge */}
-              <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl px-6 py-4 mb-6">
-                <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
-                <span className="text-emerald-400 text-sm font-black uppercase tracking-widest">
+              <div className="flex items-center gap-3 bg-success/10 border border-success/20 rounded-2xl px-6 py-4 mb-6">
+                <CheckCircle2 size={18} className="text-success shrink-0" />
+                <span className="text-success text-sm font-black uppercase tracking-widest">
                   +91 {phone} — Verified
                 </span>
               </div>
@@ -308,17 +308,17 @@ export default function ResetPasswordPage() {
               <form onSubmit={handleResetPassword} className="space-y-4">
                 {/* New Password */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted ml-1">
                     New Password
                   </label>
-                  <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/8 transition-all overflow-hidden">
-                    <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0">
+                  <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-primary/50 focus-within:bg-white/8 transition-all overflow-hidden">
+                    <div className="pl-6 pr-4 flex items-center pointer-events-none text-muted group-focus-within:text-primary transition-colors shrink-0">
                       <Lock size={18} />
                     </div>
                     <input
                       type={showNew ? "text" : "password"}
                       placeholder="Min 6 characters"
-                      className="flex-1 bg-transparent py-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
+                      className="flex-1 bg-transparent py-4 pr-4 text-white placeholder:text-muted focus:outline-none text-base"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
@@ -328,7 +328,7 @@ export default function ResetPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setShowNew((v) => !v)}
-                      className="pr-5 text-gray-600 hover:text-gray-400 transition-colors shrink-0"
+                      className="pr-5 text-muted hover:text-secondary transition-colors shrink-0"
                     >
                       {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -337,17 +337,17 @@ export default function ResetPasswordPage() {
 
                 {/* Confirm Password */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted ml-1">
                     Confirm New Password
                   </label>
-                  <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/8 transition-all overflow-hidden">
-                    <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0">
+                  <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-primary/50 focus-within:bg-white/8 transition-all overflow-hidden">
+                    <div className="pl-6 pr-4 flex items-center pointer-events-none text-muted group-focus-within:text-primary transition-colors shrink-0">
                       <KeyRound size={18} />
                     </div>
                     <input
                       type={showConfirm ? "text" : "password"}
                       placeholder="Re-enter password"
-                      className="flex-1 bg-transparent py-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
+                      className="flex-1 bg-transparent py-4 pr-4 text-white placeholder:text-muted focus:outline-none text-base"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
@@ -357,7 +357,7 @@ export default function ResetPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setShowConfirm((v) => !v)}
-                      className="pr-5 text-gray-600 hover:text-gray-400 transition-colors shrink-0"
+                      className="pr-5 text-muted hover:text-secondary transition-colors shrink-0"
                     >
                       {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -367,7 +367,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 group uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full mt-2 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-[0_10px_30px_rgba(255,87,34,0.25)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.4)] flex items-center justify-center gap-3 group uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -384,7 +384,7 @@ export default function ResetPasswordPage() {
 
         </div>
 
-        <p className="mt-12 text-center text-gray-600 text-[10px] font-bold uppercase tracking-[0.2em]">
+        <p className="mt-12 text-center text-disabled text-[10px] font-bold uppercase tracking-[0.2em]">
           Secured by Athlixir Forge &copy; 2024
         </p>
       </motion.div>
