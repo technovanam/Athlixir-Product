@@ -15,8 +15,8 @@ export default function VerifiedBadge() {
     >
       {/* Header */}
       <div className="flex items-center justify-center gap-2 mb-4">
-        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-          <Check className="w-3 h-3 text-green-400" />
+          <div className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
+          <Check className="w-3 h-3 text-success" />
         </div>
         <span className="text-[10px] font-semibold tracking-wider text-white/80 uppercase">
           Verified Athlete ID
@@ -26,12 +26,12 @@ export default function VerifiedBadge() {
       {/* Avatar Circle with Dots */}
       <div className="relative flex items-center justify-center">
         {/* Decorative Dots */}
-        <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full bg-[#FF5722]/60" />
-        <div className="absolute top-0 right-4 w-1.5 h-1.5 rounded-full bg-[#FF5722]/40" />
-        <div className="absolute -top-1 right-8 w-1 h-1 rounded-full bg-[#FF5722]/30" />
+        <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full bg-primary/60" />
+        <div className="absolute top-0 right-4 w-1.5 h-1.5 rounded-full bg-primary/40" />
+        <div className="absolute -top-1 right-8 w-1 h-1 rounded-full bg-primary/30" />
         
         {/* Main Avatar Circle */}
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF5722] to-[#FF8A50] flex items-center justify-center shadow-lg shadow-[#FF5722]/30">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF5722] to-[#FF8A50] flex items-center justify-center shadow-lg shadow-primary/25">
           {/* Person Icon */}
           <svg
             width="28"
@@ -48,7 +48,7 @@ export default function VerifiedBadge() {
         </div>
         
         {/* More Decorative Dots */}
-        <div className="absolute -bottom-1 -left-2 w-1.5 h-1.5 rounded-full bg-[#FF5722]/40" />
+        <div className="absolute -bottom-1 -left-2 w-1.5 h-1.5 rounded-full bg-primary/40" />
       </div>
     </Card>
   );

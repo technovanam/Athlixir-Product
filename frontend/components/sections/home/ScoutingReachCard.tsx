@@ -13,8 +13,8 @@ export default function ScoutingReachCard() {
     <Card className="w-[220px] animate-float">
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
-        <div className="w-6 h-6 rounded-md bg-[#FF5722]/20 flex items-center justify-center">
-          <Zap className="w-4 h-4 text-[#FF5722]" />
+          <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
+          <Zap className="w-4 h-4 text-primary" />
         </div>
         <span className="text-xs font-semibold tracking-wider text-white/80 uppercase">
           Scouting Reach
@@ -39,11 +39,11 @@ export default function ScoutingReachCard() {
       {/* Athlixir Powered Stat */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-2xl font-bold text-[#FF5722]">
+          <span className="text-2xl font-bold text-primary">
             {SCOUTING_STATS.athlixirPowered}%
           </span>
-          <div className="w-10 h-5 rounded-full bg-[#FF5722]/20 relative">
-            <div className="absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#FF5722]" />
+          <div className="w-10 h-5 rounded-full bg-primary/20 relative">
+            <div className="absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary" />
           </div>
         </div>
         <p className="text-[10px] font-medium tracking-wider text-white/40 uppercase">
