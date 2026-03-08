@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
 export const inputCls =
-  "w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-orange-500/50 text-sm transition-colors";
+  "w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-white placeholder:text-muted focus:outline-none focus:border-primary/50 text-sm transition-colors";
 
 // ---------------------------------------------------------------------------
 // Custom fully-themed select — replaces native <select> so option highlight
@@ -59,31 +59,31 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
         type="button"
         disabled={disabled}
         onClick={() => setOpen((p) => !p)}
-        className={`w-full flex items-center justify-between bg-[#0a0a0a] border ${
-          open ? "border-[#FF5722] ring-1 ring-[#FF5722]/40" : "border-[#FF5722]/30"
+        className={`w-full flex items-center justify-between bg-background border ${
+          open ? "border-primary ring-1 ring-primary/40" : "border-primary/30"
         } rounded-none px-4 py-2.5 text-sm text-white transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
         suppressHydrationWarning
       >
-        <span className={selected && selected.value !== "" ? "text-white" : "text-gray-500"}>
+        <span className={selected && selected.value !== "" ? "text-white" : "text-muted"}>
           {selected ? selected.label : "Select"}
         </span>
         <ChevronDown
           size={14}
-          className={`text-[#FF5722] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`text-primary transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
       {/* Dropdown panel */}
       {open && (
-        <ul className="absolute z-50 mt-1 w-full bg-[#0d0d0d] border border-[#FF5722]/30 rounded-none overflow-hidden shadow-lg max-h-56 overflow-y-auto">
+        <ul className="absolute z-50 mt-1 w-full bg-surface-1 border border-primary/30 rounded-none overflow-hidden shadow-lg max-h-56 overflow-y-auto">
           {options.map((opt) => (
             <li
               key={opt.value}
               onClick={() => select(opt.value)}
               className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
                 opt.value === value
-                  ? "bg-[#FF5722] text-white font-bold"
-                  : "text-gray-300 hover:bg-[#FF5722]/20 hover:text-white"
+                  ? "bg-primary text-white font-bold"
+                  : "text-secondary hover:bg-primary/20 hover:text-white"
               }`}
             >
               {opt.label}
@@ -97,7 +97,7 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
 
 export function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">
+    <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-1.5">
       {children}
     </label>
   );

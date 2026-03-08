@@ -126,9 +126,9 @@ export default function OnboardingPage() {
       >
         <Link
           href="/"
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
+          className="flex items-center gap-2 text-secondary hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
         >
-          <ArrowRight className="rotate-180 text-orange-500" size={18} />
+          <ArrowRight className="rotate-180 text-primary" size={18} />
           Back to Home
         </Link>
       </motion.div>
@@ -144,14 +144,14 @@ export default function OnboardingPage() {
         <div className="flex flex-col items-center mb-3 shrink-0">
 
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-orange-500/20 flex items-center justify-center shrink-0">
-              <Lock className="w-4 h-4 text-orange-500" />
+            <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+              <Lock className="w-4 h-4 text-primary" />
             </div>
             <div>
               <h1 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white leading-tight">
                 Complete Your Athlete Profile
               </h1>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted mt-0.5">
                 Step {step} of 2 · Secured & Verified
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function OnboardingPage() {
               <div
                 key={s}
                 className={`h-1 rounded-full transition-all duration-500 ${
-                  s <= step ? "bg-orange-500 w-12" : "bg-white/10 w-8"
+                  s <= step ? "bg-primary w-12" : "bg-white/10 w-8"
                 }`}
               />
             ))}
