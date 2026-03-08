@@ -1,119 +1,74 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
-import StarBorder from '@/components/ui/StarBorder';
-import GooeyButton from '@/components/GooeyButton';
+import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Logo from '@/components/layout/Logo';
+
 const Contact = () => {
     return (
-        <footer className="relative bg-[#0A0A0A] border-t border-white/10 font-sans overflow-hidden" id="contact">
+        <footer id="contact" className="bg-black text-white pt-24 pb-12 border-t border-white/10">
+            <div className="container mx-auto px-6 lg:px-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
 
-            {/* ── MAIN CONTENT GRID (z-10 relative) ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 relative z-10 pointer-events-none">
-
-                {/* LEFT SIDE (Spans 7 cols) -> Content needs pointer-events-auto */}
-                <div className="col-span-1 lg:col-span-7 flex flex-col border-b lg:border-b-0 lg:border-r border-white/10 pointer-events-auto">
-
-                    {/* Links Flow */}
-                    <div className="p-10 md:p-16 flex-grow flex flex-col justify-between relative z-20">
-
-                        {/* Links Grid -> Perfectly aligned */}
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-3xl relative z-30">
-                            <div className="flex flex-col space-y-5">
-                                <h4 className="text-white font-bold text-base tracking-wide">Resources</h4>
-                                <ul className="space-y-3 font-light text-white/60 text-sm">
-                                    <li><Link href="#features" className="hover:text-white transition-colors block py-0.5">Why Athlixir?</Link></li>
-                                    <li><Link href="#research" className="hover:text-white transition-colors block py-0.5">Case Studies</Link></li>
-                                    <li><Link href="#blog" className="hover:text-white transition-colors block py-0.5">Training Blog</Link></li>
-                                    <li><Link href="#guides" className="hover:text-white transition-colors block py-0.5">Coaching Guides</Link></li>
-                                </ul>
-                            </div>
-                            <div className="flex flex-col space-y-5">
-                                <h4 className="text-white font-bold text-base tracking-wide">Company</h4>
-                                <ul className="space-y-3 font-light text-white/60 text-sm">
-                                    <li><Link href="#about" className="hover:text-white transition-colors block py-0.5">About Us</Link></li>
-                                    <li><Link href="#careers" className="hover:text-white transition-colors block py-0.5">Careers</Link></li>
-                                    <li><Link href="#partners" className="hover:text-white transition-colors block py-0.5">Partners</Link></li>
-                                    <li><Link href="#contact" className="hover:text-white transition-colors block py-0.5">Contact Us</Link></li>
-                                </ul>
-                            </div>
-                            <div className="flex flex-col space-y-5">
-                                <h4 className="text-white font-bold text-base tracking-wide">Social</h4>
-                                <ul className="space-y-3 font-light text-white/60 text-sm">
-                                    <li><Link href="#" className="hover:text-white transition-colors block py-0.5">LinkedIn</Link></li>
-                                    <li><Link href="#" className="hover:text-white transition-colors block py-0.5">Twitter</Link></li>
-                                    <li><Link href="#" className="hover:text-white transition-colors block py-0.5">Instagram</Link></li>
-                                    <li><Link href="#" className="hover:text-white transition-colors block py-0.5">YouTube</Link></li>
-                                </ul>
-                            </div>
-
-                            {/* Contact Form */}
-                            <form className="space-y-4">
-                                <input
-                                    type="text"
-                                    placeholder="Your Name"
-                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
-                                    suppressHydrationWarning
-                                />
-                                <input
-                                    type="email"
-                                    placeholder="Your Email"
-                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
-                                    suppressHydrationWarning
-                                />
-                                <textarea
-                                    placeholder="Your Message"
-                                    rows={4}
-                                    className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50 resize-none"
-                                />
-                                <button
-                                    type="submit"
-                                    className="w-full py-3 bg-[#FF5722] text-white font-bold rounded-md hover:bg-[#E64A19] transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg"
-                                    suppressHydrationWarning
-                                >
-                                    Send Message
-                                    <ArrowRight size={20} />
-                                </button>
-                            </form>
-
+                    {/* Brand Column */}
+                    <div className="space-y-8">
+                        <Logo />
+                        <p className="text-gray-400 leading-relaxed font-light text-sm pr-4">
+                            Empowering grassroots athletes with verified digital profiles, performance analytics, and real career opportunities.
+                        </p>
+                        <div className="flex space-x-3">
+                            {[Instagram, Twitter, Linkedin, Facebook].map((Icon, i) => (
+                                <a key={i} href="#" className="p-2.5 bg-white/5 border border-white/10 rounded-full hover:bg-primary hover:border-primary hover:text-white transition-all text-gray-400">
+                                    <Icon size={18} />
+                                </a>
+                            ))}
                         </div>
-
-                        {/* Logo and small description returning to fill bottom space professionally */}
-                        <div className="mt-16 sm:mt-24 w-full">
-                            <h2 className="text-[#FF5722] text-2xl font-black mb-2 tracking-widest uppercase">Athlixir</h2>
-                            <p className="text-white/40 text-xs uppercase tracking-widest font-semibold">Elevating Human Performance</p>
-                        </div>
-
                     </div>
+
+                    {/* Quick Links */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Platform</h3>
+                        <ul className="space-y-4 text-gray-300 font-medium text-sm">
+                            <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Vision</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Research</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+                        </ul>
+                    </div>
+
+                    {/* For Users */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Ecosystem</h3>
+                        <ul className="space-y-4 text-gray-300 font-medium text-sm">
+                            <li><a href="#" className="hover:text-primary transition-colors">For Athletes</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">For Coaches</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">For Academies</a></li>
+                        </ul>
+                    </div>
+
+                    {/* Newsletter */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Stay Updated</h3>
+                        <p className="text-gray-400 mb-6 text-sm font-light">Join our newsletter for the latest updates.</p>
+                        <form className="flex flex-col space-y-4">
+                            <input
+                                type="email"
+                                placeholder="Enter your email"
+                                className="bg-white/5 border border-white/10 rounded-lg px-5 py-3.5 text-white focus:outline-none focus:border-primary/50 transition-colors placeholder-gray-600 text-sm"
+                            />
+                            <button className="px-5 py-3.5 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors shadow-lg text-xs uppercase tracking-widest">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
 
-                {/* RIGHT SIDE (Spans 5 cols) -> Higher z-index background so form easily pops */}
-                <div className="col-span-1 lg:col-span-5 relative flex flex-col pointer-events-auto z-20">
-
-                    <div className="p-6 sm:p-10 lg:p-14 relative z-40">
-                        <div className="mb-8 pl-2">
-                            <h2 className="text-3xl md:text-5xl lg:text-[44px] font-black text-white uppercase mb-3 leading-none">Get In Touch</h2>
-                            <p className="text-gray-400 text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold">We're here to <span className="text-[#FF5722]">help you</span></p>
-                        </div>
-
-                        {/* Top Interactive Form. Completely separate from avatars below it. */}
-                        <StarBorder as="div" color="#FF5722" speed="5s" thickness={2} className="w-full relative z-40 bg-[#0A0A0A]">
-                            <div className="p-6 sm:p-8 rounded-[inherit] space-y-6 relative border border-white/5 bg-[#0A0A0A]">
-                                <form className="space-y-5">
-                                    <input type="text" placeholder="Your Name" className="w-full bg-[#151515] border border-white/10 rounded-xl py-4 px-5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FF5722]/60 focus:ring-1 focus:ring-[#FF5722]/60 transition-all font-medium" />
-                                    <input type="email" placeholder="Your Email" className="w-full bg-[#151515] border border-white/10 rounded-xl py-4 px-5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FF5722]/60 focus:ring-1 focus:ring-[#FF5722]/60 transition-all font-medium" />
-                                    <textarea placeholder="Your Message" rows={4} className="w-full bg-[#151515] border border-white/10 rounded-xl py-4 px-5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#FF5722]/60 focus:ring-1 focus:ring-[#FF5722]/60 resize-none transition-all font-medium" />
-                                    <div className="pt-4 flex justify-end w-full">
-                                        <GooeyButton label="Send Message" type="submit" className="w-full max-w-[200px] border border-white/20 hover:border-[#FF5722] text-sm py-4" />
-                                    </div>
-                                </form>
-                            </div>
-                        </StarBorder>
+                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-medium tracking-wide">
+                    <p>© 2026 Athlixir | Built with purpose.</p>
+                    <div className="flex space-x-8 mt-4 md:mt-0">
+                        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
                     </div>
-
-                    {/* Spacer guarantees container naturally stretches without form overlap */}
-                    <div className="h-[20px] md:h-[40px] w-full shrink-0 mt-auto pointer-events-none" aria-hidden="true" />
                 </div>
             </div>
         </footer>
