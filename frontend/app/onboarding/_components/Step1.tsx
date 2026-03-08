@@ -35,14 +35,14 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
       exit={{ opacity: 0, x: 20 }}
       className="space-y-4"
     >
-      <SectionCard icon={<User size={18} className="text-orange-500" />} title="Personal Information">
+      <SectionCard icon={<User size={18} className="text-primary" />} title="Personal Information">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
           {/* Name */}
           <div>
             <FieldLabel>
               Full Name{" "}
-              <span className="text-orange-500 uppercase font-bold">(auto-filled from signup)</span>
+              <span className="text-primary uppercase font-bold">(auto-filled from signup)</span>
             </FieldLabel>
             <input
               type="text"
@@ -58,7 +58,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           {/* Date of Birth */}
           <div>
             <FieldLabel>
-              Date of Birth <span className="text-orange-500">(locked after save)</span>
+              Date of Birth <span className="text-primary">(locked after save)</span>
             </FieldLabel>
             <input
               type="date"
@@ -90,7 +90,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
             <FieldLabel>Age (auto)</FieldLabel>
             <input
               type="text"
-              className={`${inputCls} cursor-not-allowed text-gray-400`}
+              className={`${inputCls} cursor-not-allowed text-muted`}
               value={age}
               readOnly
               placeholder="—"
@@ -211,7 +211,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
               type="file"
               accept="image/*"
               onChange={handlePhotoChange}
-              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-orange-500/20 file:text-orange-400 hover:file:bg-orange-500/30 cursor-pointer`}
+              className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-primary/20 file:text-primary hover:file:bg-primary/30 cursor-pointer`}
               suppressHydrationWarning
             />
           </div>
@@ -224,7 +224,7 @@ export function Step1({ form, age, updateField, saving, onNext }: Step1Props) {
           type="button"
           onClick={onNext}
           disabled={saving}
-          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-4 bg-primary hover:bg-primary-hover text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           suppressHydrationWarning
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}

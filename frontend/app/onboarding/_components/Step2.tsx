@@ -32,8 +32,8 @@ export function Step2({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
 
         {/* Specialization */}
-        <SectionCard icon={<Star size={18} className="text-orange-500" />} title="Specialization">
-          <p className="text-gray-500 text-xs mb-3">Defines the athlete&apos;s specialization.</p>
+        <SectionCard icon={<Star size={18} className="text-primary" />} title="Specialization">
+          <p className="text-muted text-xs mb-3">Defines the athlete&apos;s specialization.</p>
           <div className="grid gap-4">
 
             <div>
@@ -82,7 +82,7 @@ export function Step2({
         
 
         {/* Preferences */}
-        <SectionCard icon={<Target size={18} className="text-orange-500" />} title="Preferences">
+        <SectionCard icon={<Target size={18} className="text-primary" />} title="Preferences">
           <div className="grid gap-4">
 
             <div>
@@ -128,7 +128,7 @@ export function Step2({
           type="button"
           onClick={onComplete}
           disabled={saving}
-          className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-4 bg-primary hover:bg-primary-hover text-white font-black rounded-md text-[10px] uppercase tracking-widest flex items-center gap-2 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving && <Loader2 className="w-4 h-4 animate-spin" />}
           Complete Profile
