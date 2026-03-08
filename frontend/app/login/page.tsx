@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2, Phone, CheckCircle2, X } from "lucide-react";
+import { ArrowRight, Loader2, Phone, CheckCircle2, X, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,6 +18,13 @@ export default function LoginPage() {
   const [otpDigits, setOtpDigits]         = useState<string[]>(["", "", "", "", "", ""]);
   const [otpError, setOtpError]           = useState<string>("");
   const [error, setError]                 = useState<string>("");
+  const [resendTimer, setResendTimer]     = useState<number>(0);
+
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const t = setTimeout(() => setResendTimer((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendTimer]);
 
   const otpRefs = [
     useRef<HTMLInputElement>(null),
@@ -38,6 +45,7 @@ export default function LoginPage() {
       setOtpSent(true);
       setOtpDigits(["", "", "", "", "", ""]);
       setShowOtpModal(true);
+      setResendTimer(60);
     } catch {
       setError("Failed to send OTP. Please try again.");
     } finally {
@@ -78,7 +86,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative h-screen flex items-center justify-center overflow-hidden">
+    <div className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background">
 
       {/* OTP Modal */}
       <AnimatePresence>
@@ -95,7 +103,7 @@ export default function LoginPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-sm bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+              className="relative w-full bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]" style={{ maxWidth: "360px" }}
             >
               <button
                 type="button"
@@ -106,8 +114,8 @@ export default function LoginPage() {
               </button>
 
               <div className="flex justify-center mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                  <Phone size={26} className="text-orange-500" />
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                  <Phone size={26} className="text-primary" />
                 </div>
               </div>
 
@@ -116,7 +124,7 @@ export default function LoginPage() {
               </h2>
               <p className="text-gray-500 text-[11px] text-center uppercase tracking-widest mb-6">
                 Enter the 6-digit OTP sent to<br />
-                <span className="text-orange-400 font-bold">+91 {phone}</span>
+                <span className="text-primary font-bold">+91 {phone}</span>
               </p>
 
               <div className="flex justify-center gap-3 mb-4">
@@ -151,13 +159,13 @@ export default function LoginPage() {
                     }}
                     disabled={otpLoading}
                     suppressHydrationWarning
-                    className="w-10 h-10 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-orange-500 focus:bg-white/[0.08] transition-all"
+                    className="w-10 h-10 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary focus:bg-white/[0.08] transition-all"
                   />
                 ))}
               </div>
 
               {otpError && (
-                <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest text-center mb-4">
+                <p className="text-error text-[10px] font-bold uppercase tracking-widest text-center mb-4">
                   {otpError}
                 </p>
               )}
@@ -167,82 +175,95 @@ export default function LoginPage() {
                 onClick={handleVerifyOtp}
                 disabled={otpLoading || otpDigits.join("").length < 6}
                 suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2"
+                className="w-3/4 mx-auto py-4 bg-primary hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,87,34,0.3)]"
               >
                 {otpLoading ? <Loader2 size={18} className="animate-spin" /> : "Verify OTP"}
               </button>
 
               <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest mt-4">
                 Didn&apos;t receive?{" "}
-                <button
-                  type="button"
-                  onClick={handleSendOtp}
-                  disabled={otpLoading}
-                  className="text-orange-500 font-black hover:text-orange-400 transition-colors"
-                >
-                  Resend
-                </button>
+                {resendTimer > 0 ? (
+                  <span className="text-primary font-black">
+                    Resend in {Math.floor(resendTimer / 60)}:{String(resendTimer % 60).padStart(2, "0")}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpLoading}
+                    className="text-primary font-black hover:text-orange-400 transition-colors"
+                  >
+                    Resend
+                  </button>
+                )}
               </p>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Background */}
-      <div className="absolute inset-0 -z-10">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1305&auto=format&fit=crop"
-          alt="stadium"
+          alt="Athlete Background"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/70" />
-        <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
       </div>
 
-      {/* Back Button */}
-      <div className="absolute top-10 left-10">
+      {/* Back to Home */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="absolute top-10 left-6 lg:left-12 z-20"
+      >
         <Link
           href="/"
-          className="flex items-center gap-2 text-gray-400 hover:text-white text-sm font-bold uppercase tracking-widest"
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
         >
-          <ArrowRight className="rotate-180 text-orange-500" size={18} />
+          <ArrowRight className="rotate-180 text-primary" size={18} />
           Back to Home
         </Link>
-      </div>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-130 px-6"
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-[480px] px-6 relative z-10"
       >
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="mb-4">
+        {/* Header */}
+        <div className="flex flex-col items-center mb-8">
+          <Link href="/" className="mb-4">
             <svg width="52" height="52" viewBox="0 0 52 52">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
+              <polygon points="26,4 6,48 14,48 26,18" fill="#FF5722" />
+              <polygon points="26,4 46,48 38,48 26,18" fill="#E64A19" />
+              <rect x="14" y="30" width="24" height="5" rx="1" fill="#FF5722" />
             </svg>
-          </div>
-          <h1 className="text-4xl font-black text-white uppercase">Access Portal</h1>
-          <p className="text-gray-400 text-[10px] uppercase tracking-[0.3em] mt-2">
-            Secured Athlixir <span className="text-orange-500">Data Gate</span>
+          </Link>
+          <h1 className="text-4xl font-black text-white mb-2 tracking-tight uppercase">Access Portal</h1>
+          <p className="text-gray-400 text-center text-[10px] font-black uppercase tracking-[0.3em]">
+            Secured Athlixir <span className="text-primary">Data Gate</span>
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-[40px] p-10 shadow-[0_0_60px_rgba(0,0,0,0.6)]">
-
+        <div
+          className="bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+          onFocus={() => setError("")}
+        >
           <AnimatePresence>
             {error && (
               <motion.div
                 key="error"
                 initial={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
                 className="mb-6 overflow-hidden"
               >
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs font-bold uppercase text-center">
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs font-bold uppercase tracking-widest text-center">
                   {error}
                 </div>
               </motion.div>
@@ -250,18 +271,16 @@ export default function LoginPage() {
           </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="space-y-8">
-
-            {/* Phone Number */}
+            {/* Phone Field */}
             <div className="space-y-3">
-              <label className="text-xs font-bold uppercase text-gray-500">
+              <label className="text-xs font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
                 Phone Number
               </label>
-
-              <div className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/[0.08] transition-all overflow-hidden">
-                <div className="pl-5 pr-4 flex items-center pointer-events-none text-gray-500 shrink-0 border-r border-white/10">
-                  <Phone size={18} />
+              <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-lg focus-within:border-primary/50 focus-within:bg-white/[0.08] transition-all overflow-hidden">
+                <div className="pl-5 pr-3 flex items-center pointer-events-none text-gray-600 group-focus-within:text-primary transition-colors shrink-0">
+                  <Phone size={20} />
                 </div>
-                <span className="pl-4 pr-1 py-4 text-gray-500 text-base select-none shrink-0">
+                <span className="pr-3 py-4 text-gray-500 text-base select-none shrink-0 border-r border-white/10">
                   +91
                 </span>
                 <input
@@ -269,7 +288,7 @@ export default function LoginPage() {
                   inputMode="numeric"
                   maxLength={10}
                   placeholder="XXXXX XXXXX"
-                  className="flex-1 bg-transparent py-4 pl-3 pr-4 text-white placeholder:text-gray-600 focus:outline-none text-base"
+                  className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-lg"
                   value={phone}
                   onChange={(e) => {
                     const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
@@ -284,8 +303,8 @@ export default function LoginPage() {
                 />
                 {phoneVerified && (
                   <div className="pr-4 flex items-center shrink-0">
-                    <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
-                      <CheckCircle2 size={16} className="shrink-0" />
+                    <span className="flex items-center gap-1.5 text-green-400 text-[10px] font-black uppercase tracking-widest">
+                      <CheckCircle2 size={16} />
                       Verified
                     </span>
                   </div>
@@ -293,21 +312,21 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Submit / Verify */}
+            {/* Submit / Verify Button */}
             {!phoneVerified ? (
               <button
                 type="button"
                 onClick={handleSendOtp}
                 disabled={otpLoading || phone.length < 10}
                 suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 group mt-4 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {otpLoading ? (
-                  <Loader2 className="animate-spin" size={20} />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
                   <>
                     Verify Phone
-                    <Phone size={20} />
+                    <Phone size={20} className="group-hover:scale-110 transition-transform" />
                   </>
                 )}
               </button>
@@ -316,29 +335,25 @@ export default function LoginPage() {
                 type="submit"
                 disabled={loading}
                 suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 group mt-4 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
-                  <Loader2 className="animate-spin" size={20} />
+                  <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
                   <>
                     Enter Athlixir
-                    <ArrowRight size={20} />
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </button>
             )}
-
           </form>
         </div>
 
         {/* Footer */}
-        <p className="mt-10 text-center text-gray-500 text-sm">
+        <p className="mt-10 text-center text-gray-500 text-sm font-medium tracking-wide">
           New Athlete?{" "}
-          <Link
-            href="/signup"
-            className="text-orange-500 font-bold hover:text-orange-400 uppercase"
-          >
+          <Link href="/signup" className="text-primary font-black hover:text-orange-400 transition-colors uppercase ml-1">
             Build Profile
           </Link>
         </p>
