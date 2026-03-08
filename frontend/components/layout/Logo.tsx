@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-/**
- * Athlixir Logo component
- * Displays the brand logo with the "A" icon and text
- */
-export default function Logo() {
+export default function Logo({ onClick }: { onClick?: () => void }) {
   return (
-    <Link href="/" className="flex items-center gap-3 group">
+    <Link
+      href="/"
+      onClick={onClick}
+      className="flex items-center gap-3 group transition-transform hover:scale-105 active:scale-95 duration-200"
+    >
       {/* Logo Icon - Stylized "A" */}
       <div className="relative">
         <svg
@@ -20,13 +20,12 @@ export default function Logo() {
           {/* Triangle/Mountain shape */}
           <path
             d="M20 4L36 36H4L20 4Z"
-            fill="#FF5722"
-            className="transition-all duration-300"
+            className="fill-primary transition-all duration-300"
           />
           {/* Inner cutout for the "A" effect */}
           <path
             d="M20 16L26 28H14L20 16Z"
-            fill="#0A0A0A"
+            className="fill-surface-1"
           />
           {/* Horizontal bar of the "A" */}
           <rect
@@ -34,7 +33,7 @@ export default function Logo() {
             y="24"
             width="16"
             height="3"
-            fill="#0A0A0A"
+            className="fill-surface-1"
           />
         </svg>
       </div>
@@ -42,7 +41,7 @@ export default function Logo() {
       {/* Logo Text */}
       <span className="text-2xl font-bold tracking-tight">
         <span className="text-white">ATHL</span>
-        <span className="text-[#FF5722]">IXIR</span>
+        <span className="text-primary">IXIR</span>
       </span>
     </Link>
   );
