@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { createPortal } from "react-dom";
+import { ChevronDown, Search } from "lucide-react";
 
 export const inputCls =
   "w-full bg-white/5 border border-white/10 rounded-md px-4 py-2.5 text-white placeholder:text-muted focus:outline-none focus:border-primary/50 text-sm transition-colors";
@@ -34,38 +35,80 @@ function parseOptions(children: React.ReactNode): SelectOption[] {
 
 export function StyledSelect({ value, onChange, children, disabled }: StyledSelectProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const options = parseOptions(children);
-  const selected = options.find((o) => o.value === value);
+  const [query, setQuery] = useState("");
+  const [dropPos, setDropPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
-  // Close on outside click
+  const allOptions = parseOptions(children);
+  const selected = allOptions.find((o) => o.value === value);
+
+  const searchable = allOptions.filter((o) => o.value !== "");
+  const filtered = query.trim()
+    ? searchable.filter((o) => o.label.toLowerCase().includes(query.toLowerCase()))
+    : searchable;
+
+  // Calculate fixed position from trigger on open
+  function openDropdown() {
+    if (!triggerRef.current) return;
+    const r = triggerRef.current.getBoundingClientRect();
+    setDropPos({ top: r.bottom + 4, left: r.left, width: r.width });
+    setOpen(true);
+  }
+
+  // Close on outside click or scroll
   useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    if (!open) return;
+    function close() { setOpen(false); setQuery(""); }
+    function onMouseDown(e: MouseEvent) {
+      const panel = document.getElementById("styled-select-panel");
+      if (
+        triggerRef.current?.contains(e.target as Node) ||
+        panel?.contains(e.target as Node)
+      ) return;
+      close();
     }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+    function onScroll(e: Event) {
+      const panel = document.getElementById("styled-select-panel");
+      if (panel?.contains(e.target as Node)) return; // ignore scrolls inside the list
+      close();
+    }
+    document.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("scroll", onScroll, true);
+    return () => {
+      document.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("scroll", onScroll, true);
+    };
+  }, [open]);
+
+  // Auto-focus search when opening
+  useEffect(() => {
+    if (open) setTimeout(() => searchRef.current?.focus(), 50);
+    else setQuery("");
+  }, [open]);
 
   function select(val: string) {
     onChange({ target: { value: val } });
     setOpen(false);
+    setQuery("");
   }
 
   return (
-    <div ref={ref} className="relative w-full">
+    <div className="relative w-full">
       {/* Trigger */}
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
-        onClick={() => setOpen((p) => !p)}
-        className={`w-full flex items-center justify-between bg-background border ${
-          open ? "border-primary ring-1 ring-primary/40" : "border-primary/30"
-        } rounded-none px-4 py-2.5 text-sm text-white transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        onClick={openDropdown}
+        className={`w-full flex items-center justify-between bg-white/5 border ${
+          open ? "border-primary/50 ring-1 ring-primary/20" : "border-white/10"
+        } rounded-md px-4 py-2.5 text-sm text-white transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
         suppressHydrationWarning
       >
         <span className={selected && selected.value !== "" ? "text-white" : "text-muted"}>
-          {selected ? selected.label : "Select"}
+          {selected && selected.value !== "" ? selected.label : "Select"}
         </span>
         <ChevronDown
           size={14}
@@ -73,24 +116,65 @@ export function StyledSelect({ value, onChange, children, disabled }: StyledSele
         />
       </button>
 
-      {/* Dropdown panel */}
-      {open && (
-        <ul className="absolute z-50 mt-1 w-full bg-surface-1 border border-primary/30 rounded-none overflow-hidden shadow-lg max-h-56 overflow-y-auto">
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              onClick={() => select(opt.value)}
-              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
-                opt.value === value
-                  ? "bg-primary text-white font-bold"
-                  : "text-secondary hover:bg-primary/20 hover:text-white"
-              }`}
+      {/* Dropdown portal — rendered on document.body, position: fixed */}
+      {open && dropPos && typeof document !== "undefined" &&
+        createPortal(
+          <div
+            id="styled-select-panel"
+            className="bg-[#0d0d0d] border border-white/10 rounded-md"
+            style={{
+              position: "fixed",
+              top: dropPos.top,
+              left: dropPos.left,
+              width: dropPos.width,
+              zIndex: 9999,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.7)",
+            }}
+          >
+            {/* Search — shown only when list > 5 items */}
+            {searchable.length > 5 && (
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10">
+                <Search size={13} className="text-white/30 shrink-0" />
+                <input
+                  ref={searchRef}
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search…"
+                  className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 focus:outline-none"
+                />
+              </div>
+            )}
+
+            {/* Scrollable list — thin custom scrollbar */}
+            <ul
+              ref={listRef}
+              onWheel={(e) => e.stopPropagation()}
+              className="max-h-64 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full"
+              style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.2) transparent" } as React.CSSProperties}
             >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
-      )}
+              {filtered.length === 0 ? (
+                <li className="px-4 py-3 text-sm text-white/30 text-center">No results</li>
+              ) : (
+                filtered.map((opt) => (
+                  <li
+                    key={opt.value}
+                    onClick={() => select(opt.value)}
+                    className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                      opt.value === value
+                        ? "bg-primary/20 text-primary font-semibold"
+                        : "text-white/70 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    {opt.label}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>,
+          document.body
+        )
+      }
     </div>
   );
 }

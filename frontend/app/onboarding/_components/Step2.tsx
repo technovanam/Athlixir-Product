@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Ruler, Award, Target, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
+import { Dumbbell, ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
 import { FieldLabel, SectionCard, inputCls, StyledSelect } from "./shared";
 import { FormState, CURRENT_LEVELS, PREFERRED_TRAINING_TYPES, DISABILITY_CATEGORIES, SPORT_CATEGORIES, SPORTS_LIST } from "./types";
 
@@ -81,33 +81,95 @@ export function Step2({
 
         
 
-        {/* Preferences */}
-        <SectionCard icon={<Target size={18} className="text-primary" />} title="Preferences">
+        {/* Training Information */}
+        <SectionCard icon={<Dumbbell size={18} className="text-primary" />} title="Training Information">
           <div className="grid gap-4">
 
+            {/* Currently Training toggle */}
             <div>
-              <FieldLabel>Secondary Sports (optional)</FieldLabel>
-              <input
-                type="text"
-                className={inputCls}
-                placeholder="e.g. Athletics, Swimming"
-                value={form.secondarySports}
-                onChange={(e) => updateField("secondarySports", e.target.value)}
-              />
+              <FieldLabel>Currently Training?</FieldLabel>
+              <div className="flex gap-3 mt-1">
+                {(["yes", "no"] as const).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => updateField("currentlyTraining", v)}
+                    className={`px-6 py-2 rounded-md text-[10px] font-bold uppercase tracking-widest border transition-all ${
+                      form.currentlyTraining === v
+                        ? "bg-primary text-white border-primary"
+                        : "bg-white/5 text-white/60 border-white/10 hover:bg-white/10"
+                    }`}
+                  >
+                    {v === "yes" ? "Yes" : "No"}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div>
-              <FieldLabel>Preferred Training Type (optional)</FieldLabel>
-              <StyledSelect
-                value={form.preferredTrainingType}
-                onChange={(e) => updateField("preferredTrainingType", e.target.value)}
-              >
-                <option value="">Select (optional)</option>
-                {PREFERRED_TRAINING_TYPES.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </StyledSelect>
-            </div>
+            {form.currentlyTraining === "yes" && (
+              <>
+                <div>
+                  <FieldLabel>Academy Name</FieldLabel>
+                  <input
+                    type="text"
+                    className={inputCls}
+                    placeholder="Enter academy name"
+                    value={form.currentAcademy}
+                    onChange={(e) => updateField("currentAcademy", e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <FieldLabel>Coach Name</FieldLabel>
+                  <input
+                    type="text"
+                    className={inputCls}
+                    placeholder="Enter coach name"
+                    value={form.currentCoach}
+                    onChange={(e) => updateField("currentCoach", e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <FieldLabel>Training Type</FieldLabel>
+                  <StyledSelect
+                    value={form.preferredTrainingType}
+                    onChange={(e) => updateField("preferredTrainingType", e.target.value)}
+                  >
+                    <option value="">Select training type</option>
+                    {PREFERRED_TRAINING_TYPES.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </StyledSelect>
+                </div>
+
+                <div>
+                  <FieldLabel>Year of Training</FieldLabel>
+                  <StyledSelect
+                    value={form.trainingStartYear}
+                    onChange={(e) => updateField("trainingStartYear", e.target.value)}
+                  >
+                    <option value="">Select year</option>
+                    {Array.from({ length: 2026 - 1980 + 1 }, (_, i) => 2026 - i).map((y) => (
+                      <option key={y} value={String(y)}>{y}</option>
+                    ))}
+                  </StyledSelect>
+                </div>
+
+                <div>
+                  <FieldLabel>Training Days per Week</FieldLabel>
+                  <StyledSelect
+                    value={form.trainingDaysPerWeek}
+                    onChange={(e) => updateField("trainingDaysPerWeek", e.target.value)}
+                  >
+                    <option value="">Select days</option>
+                    {["1", "2", "3", "4", "5", "6", "7"].map((d) => (
+                      <option key={d} value={d}>{d} {d === "1" ? "day" : "days"}</option>
+                    ))}
+                  </StyledSelect>
+                </div>
+              </>
+            )}
 
           </div>
         </SectionCard>

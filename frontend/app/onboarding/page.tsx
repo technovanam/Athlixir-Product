@@ -1,25 +1,29 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+// useMemo kept for age calculation
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Lock, ArrowRight } from "lucide-react";
 import { Step1 } from "./_components/Step1";
-import { Step2 } from "./_components/Step2";
 import {
   FormState,
   INITIAL_FORM,
-  SPORT_CATEGORIES,
-  SPORTS_REQUIRING_DOMINANT_HAND,
   calculateAge,
 } from "./_components/types";
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormState>(() => ({
-    ...INITIAL_FORM,
-    name: (typeof window !== "undefined" && localStorage.getItem("athlixir_signup_name")) || "",
-  }));
+  const [form, setForm] = useState<FormState>(() => {
+    if (typeof window === "undefined") return { ...INITIAL_FORM };
+    const draft = sessionStorage.getItem("athlixir_onboarding_draft");
+    if (draft) {
+      try { return JSON.parse(draft) as FormState; } catch {}
+    }
+    return {
+      ...INITIAL_FORM,
+      name: localStorage.getItem("athlixir_signup_name") || "",
+    };
+  });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -30,36 +34,35 @@ export default function OnboardingPage() {
     return () => clearTimeout(t);
   }, [error]);
 
-  const categories = useMemo(
-    () => (form.primarySport ? (SPORT_CATEGORIES[form.primarySport] ?? ["Other"]) : []),
-    [form.primarySport],
-  );
-
-  const showDominantHand = useMemo(
-    () => SPORTS_REQUIRING_DOMINANT_HAND.includes(form.primarySport),
-    [form.primarySport],
-  );
-
   const age = useMemo(() => calculateAge(form.dateOfBirth), [form.dateOfBirth]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     if (key === "dateOfBirth" && value) {
       const ageNum = parseInt(calculateAge(value as string), 10);
       if (!isNaN(ageNum) && ageNum < 16) {
-        setError("Age must be at least 16.");
+        setError("You must be at least 16 years old. Date has been reset.");
+        setForm((prev) => ({ ...prev, dateOfBirth: "" }));
         return;
       }
     }
     setForm((prev) => {
       const next = { ...prev, [key]: value };
       if (key === "primarySport") next.category = "";
-      if (key === "state") next.district = "";
+      if (key === "state") { next.district = ""; next.cityTown = ""; }
+      if (key === "district") next.cityTown = "";
+      if (key === "currentlyTraining" && value === "no") {
+        next.currentAcademy = "";
+        next.currentCoach = "";
+        next.preferredTrainingType = "";
+        next.trainingStartYear = "";
+        next.trainingDaysPerWeek = "";
+      }
       return next;
     });
     setError("");
   }
 
-  function validateStep1(): boolean {
+  function validateForm(): boolean {
     const checks: [boolean, string][] = [
       [!!form.name.trim(), "Name is required."],
       [!!form.dateOfBirth, "Date of birth is required."],
@@ -70,6 +73,9 @@ export default function OnboardingPage() {
       [!!form.state, "State is required."],
       [!!form.district, "District is required."],
       [!!form.cityTown.trim(), "City / Town is required."],
+      [!!form.profilePhoto, "Profile photo is required."],
+      [!!form.primarySport, "Primary sport is required."],
+      [!!form.currentLevel, "Athlete level is required."],
     ];
     for (const [valid, msg] of checks) {
       if (!valid) { setError(msg); return false; }
@@ -77,28 +83,16 @@ export default function OnboardingPage() {
     return true;
   }
 
-  async function handleSaveStep1() {
-    if (!validateStep1()) return;
+  async function handleSave() {
+    if (!validateForm()) return;
     setSaving(true);
     try {
       // TODO: wire up your save/API call here
       await new Promise((r) => setTimeout(r, 1000));
-      setStep(2);
-    } catch {
-      setError("Failed to save. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handleCompleteOnboarding() {
-    setSaving(true);
-    try {
-      // TODO: wire up your save/API call here
-      await new Promise((r) => setTimeout(r, 1000));
+      sessionStorage.setItem("athlixir_onboarding_draft", JSON.stringify(form));
       window.location.assign("/terms");
     } catch {
-      setError("Failed to complete. Please try again.");
+      setError("Failed to save. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -152,22 +146,12 @@ export default function OnboardingPage() {
                 Complete Your Athlete Profile
               </h1>
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted mt-0.5">
-                Step {step} of 2 · Secured & Verified
+                Secured &amp; Verified
               </p>
             </div>
           </div>
 
-          {/* Step progress bar */}
-          <div className="flex gap-2 mt-2">
-            {[1, 2].map((s) => (
-              <div
-                key={s}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  s <= step ? "bg-primary w-12" : "bg-white/10 w-8"
-                }`}
-              />
-            ))}
-          </div>
+
         </div>
 
         {/* Card */}
@@ -193,27 +177,14 @@ export default function OnboardingPage() {
           </AnimatePresence>
 
           <AnimatePresence mode="wait">
-            {step === 1 && (
-              <Step1
-                key="step1"
-                form={form}
-                age={age}
-                updateField={updateField}
-                saving={saving}
-                onNext={handleSaveStep1}
-              />
-            )}
-            {step === 2 && (
-              <Step2
-                key="step2"
-                form={form}
-                showDominantHand={showDominantHand}
-                updateField={updateField}
-                saving={saving}
-                onBack={() => setStep(1)}
-                onComplete={handleCompleteOnboarding}
-              />
-            )}
+            <Step1
+              key="step1"
+              form={form}
+              age={age}
+              updateField={updateField}
+              saving={saving}
+              onNext={handleSave}
+            />
           </AnimatePresence>
         </div>
       </motion.div>

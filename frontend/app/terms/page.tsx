@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertTriangle, CheckCircle } from "lucide-react";
+import { ArrowLeft, AlertTriangle, CheckCircle, ShieldCheck, TriangleAlert, X } from "lucide-react";
 
 type SectionBlock =
   | { type: "para"; text: string }
@@ -152,227 +152,217 @@ const consentItems = [
 
 export default function TermsPage() {
   const [consents, setConsents] = useState([false, false, false]);
+  const [showWarning, setShowWarning] = useState(true);
   const allChecked = consents.every(Boolean);
 
-  return (
-    <div style={{ background: "var(--color-background)", minHeight: "100vh" }}>
+  // Lock body scroll while warning is open
+  useEffect(() => {
+    if (showWarning) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showWarning]);
 
-      {/* Top nav bar */}
-      <header style={{
-        borderBottom: "1px solid var(--border-color-neutral)",
-        background: "var(--color-surface-1)",
-        position: "sticky",
-        top: 0,
-        zIndex: 40,
-      }}>
-        <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "var(--navbar-height)" }}>
-          {/* Logo */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", textDecoration: "none" }}>
-            <svg width="28" height="28" viewBox="0 0 52 52">
-              <polygon points="26,4 6,48 14,48 26,18" fill="#F97316" />
-              <polygon points="26,4 46,48 38,48 26,18" fill="#EA580C" />
-              <rect x="14" y="30" width="24" height="5" rx="1" fill="#F97316" />
+  return (
+    <div className="min-h-screen bg-[#050505]">
+
+      {/* Read carefully warning popup */}
+      {showWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-5">
+          <div className="bg-[#121212] border border-[#FF5722]/40 rounded-xl p-7 max-w-md w-full shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[#FF5722]/15 flex items-center justify-center shrink-0">
+                <TriangleAlert size={20} className="text-[#FF5722]" />
+              </div>
+              <h2 className="text-base font-black text-white uppercase tracking-widest">Read Carefully</h2>
+            </div>
+            <p className="text-sm text-white/60 leading-relaxed mb-2">
+              You are about to review the <span className="text-white font-semibold">Terms &amp; Consent</span> for Athlixir.
+            </p>
+            <p className="text-sm text-white/60 leading-relaxed mb-6">
+              By accepting these terms, you confirm that all information provided is <span className="text-[#FF5722] font-semibold">true and accurate</span>. Athlixir will not be responsible for any consequences arising from false or misleading data.
+            </p>
+            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-md px-4 py-3 mb-6">
+              <AlertTriangle size={14} className="text-amber-400 shrink-0" />
+              <p className="text-xs text-amber-300 leading-relaxed">
+                Please read each section thoroughly before checking the consent boxes.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowWarning(false)}
+              className="w-full py-3 bg-[#FF5722] hover:bg-[#E64A19] text-white font-black text-[11px] uppercase tracking-widest rounded-md transition-all"
+            >
+              I Understand — Continue
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Sticky header */}
+      <header className="sticky top-0 z-40 bg-[#0f0f0f] border-b border-white/10">
+        <div className="max-w-4xl mx-auto px-5 flex items-center justify-between h-16">
+          <Link href="/" className="flex items-center gap-2 no-underline">
+            <svg width="26" height="26" viewBox="0 0 52 52">
+              <polygon points="26,4 6,48 14,48 26,18" fill="#FF5722" />
+              <polygon points="26,4 46,48 38,48 26,18" fill="#E64A19" />
+              <rect x="14" y="30" width="24" height="5" rx="1" fill="#FF5722" />
             </svg>
-            <span style={{ fontWeight: "var(--fw-bold)", fontSize: "var(--fs-h4)", color: "var(--color-text-primary)" }}>Athlixir</span>
+            <span className="font-bold text-lg text-white tracking-tight">Athlixir</span>
           </Link>
 
-          {/* Back link */}
           <Link
             href="/onboarding"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--space-1)",
-              fontSize: "var(--fs-body-sm)",
-              fontWeight: "var(--fw-medium)",
-              color: "var(--color-text-secondary)",
-              textDecoration: "none",
-              transition: "color var(--transition-fast)",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--color-text-primary)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--color-text-secondary)")}
+            className="flex items-center gap-1.5 text-sm text-white/50 hover:text-white transition-colors no-underline"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={15} />
             Back
           </Link>
         </div>
       </header>
 
-      <main className="container" style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--space-10)" }}>
+      <main className="max-w-4xl mx-auto px-5 py-10">
 
-        {/* Page header */}
-        <div style={{ maxWidth: "720px", marginBottom: "var(--space-6)" }}>
-          <h1 style={{
-            fontSize: "var(--fs-hero-l)",
-            fontWeight: "var(--fw-bold)",
-            lineHeight: "var(--lh-tight)",
-            letterSpacing: "var(--ls-hero)",
-            color: "var(--color-text-primary)",
-            marginBottom: "var(--space-2)",
-          }}>
-            Terms &amp; <span className="text-gradient">Consent</span>
+        {/* Page title */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-black text-white tracking-tight mb-2">
+            Terms &amp;{" "}
+            <span className="text-[#FF5722]">Consent</span>
           </h1>
-
-          <p style={{ fontSize: "var(--fs-body)", color: "var(--color-text-secondary)", lineHeight: "var(--lh-body)" }}>
+          <p className="text-white/50 text-sm leading-relaxed max-w-2xl">
             Please read the following terms carefully. Your registration on Athlixir constitutes full acceptance of these terms and consent declarations.
           </p>
         </div>
 
-        {/* Sections */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+        {/* Term sections */}
+        <div className="flex flex-col gap-4">
+          {sections.map((section) => (
+            <section
+              key={section.id}
+              id={section.id}
+              className="bg-white/5 border border-white/10 rounded-xl p-6"
+              style={{ scrollMarginTop: "80px" }}
+            >
+              <h2 className="text-base font-semibold text-white mb-4 pb-3 border-b border-white/10">
+                {section.title}
+              </h2>
 
-            {sections.map((section) => (
-              <section
-                key={section.id}
-                id={section.id}
-                className="card"
-                style={{ scrollMarginTop: "calc(var(--navbar-height) + var(--space-4))" }}
-              >
-                <h2 style={{
-                  fontSize: "var(--fs-h4)",
-                  fontWeight: "var(--fw-semibold)",
-                  color: "var(--color-text-primary)",
-                  marginBottom: "var(--space-2)",
-                  paddingBottom: "var(--space-1)",
-                  borderBottom: "1px solid var(--border-color-neutral)",
-                }}>
-                  {section.title}
-                </h2>
+              <div className="flex flex-col gap-3">
+                {section.blocks.map((block, i) => {
+                  if (block.type === "para") {
+                    return (
+                      <p key={i} className="text-sm text-white/60 leading-relaxed">
+                        {block.text}
+                      </p>
+                    );
+                  }
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
-                  {section.blocks.map((block, i) => {
-                    if (block.type === "para") {
-                      return (
-                        <p key={i} style={{ fontSize: "var(--fs-body-md)", color: "var(--color-text-secondary)", lineHeight: "var(--lh-body)" }}>
+                  if (block.type === "warning") {
+                    return (
+                      <div key={i} className="flex gap-3 bg-amber-500/10 border border-amber-500/20 rounded-md px-4 py-3">
+                        <AlertTriangle size={15} className="text-amber-400 mt-0.5 shrink-0" />
+                        <p className="text-sm text-white/80 leading-relaxed">
+                          <span className="font-semibold text-amber-400">Note: </span>
                           {block.text}
                         </p>
-                      );
-                    }
-                    if (block.type === "warning") {
-                      return (
-                        <div key={i} className="alert alert-warning" style={{ borderRadius: "var(--radius-md)" }}>
-                          <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: "2px" }} />
-                          <span style={{ fontSize: "var(--fs-body-sm)", lineHeight: "var(--lh-body)" }}>
-                            <strong style={{ color: "var(--color-text-primary)" }}>Note: </strong>
-                            <span style={{ color: "var(--color-text-primary)", fontWeight: "var(--fw-normal)" }}>{block.text}</span>
-                          </span>
-                        </div>
-                      );
-                    }
-                    if (block.type === "bullets") {
-                      return (
-                        <ul key={i} style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)", paddingLeft: 0, margin: 0, listStyle: "none" }}>
+                      </div>
+                    );
+                  }
+
+                  if (block.type === "bullets") {
+                    return (
+                      <ul key={i} className="flex flex-col gap-2 m-0 p-0 list-none">
+                        {block.items.map((item, j) => (
+                          <li key={j} className="flex items-start gap-2">
+                            <CheckCircle size={13} className="text-[#FF5722] mt-0.5 shrink-0" />
+                            <span className="text-sm text-white/60 leading-relaxed">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                  }
+
+                  if (block.type === "provides") {
+                    return (
+                      <div key={i} className="bg-white/5 border border-white/10 rounded-md px-4 py-3">
+                        <p className="text-xs text-white/40 uppercase tracking-widest font-semibold mb-2">
+                          {block.label}
+                        </p>
+                        <ul className="flex flex-col gap-1.5 m-0 p-0 list-none">
                           {block.items.map((item, j) => (
-                            <li key={j} style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-1)" }}>
-                              <CheckCircle size={14} style={{ color: "var(--color-primary)", marginTop: "3px", flexShrink: 0 }} />
-                              <span style={{ fontSize: "var(--fs-body-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--lh-body)" }}>{item}</span>
+                            <li key={j} className="flex items-center gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#FF5722] shrink-0" />
+                              <span className="text-sm text-white/60">{item}</span>
                             </li>
                           ))}
                         </ul>
-                      );
-                    }
-                    if (block.type === "provides") {
-                      return (
-                        <div key={i} style={{
-                          background: "var(--color-surface-2)",
-                          border: "1px solid var(--border-color-neutral)",
-                          borderRadius: "var(--radius-md)",
-                          padding: "var(--space-2) var(--space-3)",
-                        }}>
-                          <p style={{ fontSize: "var(--fs-body-sm)", color: "var(--color-text-muted)", marginBottom: "var(--space-1)" }}>
-                            {block.label}
-                          </p>
-                          <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-0-5)", paddingLeft: 0, margin: 0, listStyle: "none" }}>
-                            {block.items.map((item, j) => (
-                              <li key={j} style={{ display: "flex", alignItems: "center", gap: "var(--space-1)" }}>
-                                <span style={{
-                                  width: "6px",
-                                  height: "6px",
-                                  borderRadius: "var(--radius-full)",
-                                  background: "var(--color-primary)",
-                                  flexShrink: 0,
-                                  display: "inline-block",
-                                }} />
-                                <span style={{ fontSize: "var(--fs-body-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--lh-body)" }}>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })}
-                </div>
-              </section>
-            ))}
+                      </div>
+                    );
+                  }
 
-            {/* Section 8 — Consent Confirmation */}
-            <section
-              id="consent"
-              className="card-feature"
-              style={{ scrollMarginTop: "calc(var(--navbar-height) + var(--space-4))" }}
-            >
-              <h2 style={{ fontSize: "var(--fs-h4)", fontWeight: "var(--fw-semibold)", color: "var(--color-text-primary)", marginBottom: "var(--space-3)" }}>
-                8. Consent Confirmation
-              </h2>
-
-              <p style={{ fontSize: "var(--fs-body-md)", color: "var(--color-text-secondary)", lineHeight: "var(--lh-body)", marginBottom: "var(--space-3)" }}>
-                Before completing registration, the user must confirm all of the following:
-              </p>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", marginBottom: "var(--space-4)" }}>
-                {consentItems.map((item, i) => (
-                  <label
-                    key={i}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--space-2)",
-                      padding: "var(--space-2) var(--space-3)",
-                      background: consents[i] ? "rgba(249,115,22,0.07)" : "var(--color-surface-2)",
-                      border: `1px solid ${consents[i] ? "var(--color-primary)" : "var(--border-color-neutral)"}`,
-                      borderRadius: "var(--radius-md)",
-                      cursor: "pointer",
-                      transition: "background var(--transition-hover), border-color var(--transition-hover)",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      checked={consents[i]}
-                      onChange={(e) =>
-                        setConsents((prev) => prev.map((v, idx) => (idx === i ? e.target.checked : v)))
-                      }
-                      style={{ flexShrink: 0 }}
-                    />
-                    <span style={{ fontSize: "var(--fs-body-sm)", color: "var(--color-text-primary)", fontWeight: "var(--fw-medium)", userSelect: "none" }}>
-                      {item}
-                    </span>
-                  </label>
-                ))}
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                {allChecked ? (
-                  <Link href="/dashboard" className="btn btn-primary btn-md btn-pill">
-                    Create Account
-                  </Link>
-                ) : (
-                  <button
-                    disabled
-                    className="btn btn-primary btn-md btn-pill"
-                    style={{ opacity: 0.4, cursor: "not-allowed" }}
-                    title="Please accept all terms to continue"
-                  >
-                    Create Account
-                  </button>
-                )}
+                  return null;
+                })}
               </div>
             </section>
+          ))}
 
+          {/* 8. Consent Confirmation */}
+          <section
+            id="consent"
+            className="bg-white/5 border border-[#FF5722]/30 rounded-xl p-6"
+            style={{ scrollMarginTop: "80px" }}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldCheck size={18} className="text-[#FF5722]" />
+              <h2 className="text-base font-semibold text-white">8. Consent Confirmation</h2>
+            </div>
+            <p className="text-sm text-white/50 leading-relaxed mb-5">
+              Before completing registration, please confirm all of the following:
+            </p>
+
+            <div className="flex flex-col gap-3 mb-6">
+              {consentItems.map((item, i) => (
+                <label
+                  key={i}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md border cursor-pointer transition-all select-none ${
+                    consents[i]
+                      ? "bg-[#FF5722]/10 border-[#FF5722]/40"
+                      : "bg-white/5 border-white/10 hover:bg-white/8 hover:border-white/20"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={consents[i]}
+                    onChange={(e) =>
+                      setConsents((prev) => prev.map((v, idx) => (idx === i ? e.target.checked : v)))
+                    }
+                    className="w-4 h-4 rounded accent-[#FF5722] cursor-pointer shrink-0"
+                  />
+                  <span className="text-sm text-white font-medium">{item}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex justify-end">
+              {allChecked ? (
+                <Link
+                  href="/dashboard"
+                  onClick={() => sessionStorage.removeItem("athlixir_onboarding_draft")}
+                  className="px-8 py-3 bg-[#FF5722] hover:bg-[#E64A19] text-white font-black rounded-md text-[11px] uppercase tracking-widest transition-all no-underline"
+                >
+                  Create Account
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="px-8 py-3 bg-[#FF5722] text-white font-black rounded-md text-[11px] uppercase tracking-widest opacity-30 cursor-not-allowed"
+                  title="Please accept all terms to continue"
+                >
+                  Create Account
+                </button>
+              )}
+            </div>
+          </section>
         </div>
       </main>
-
     </div>
   );
 }
