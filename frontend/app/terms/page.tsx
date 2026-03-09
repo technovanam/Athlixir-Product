@@ -167,7 +167,7 @@ export default function TermsPage() {
 
       {/* Read carefully warning popup */}
       {showWarning && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-5">
           <div className="bg-[#121212] border border-[#FF5722]/40 rounded-xl p-7 max-w-md w-full shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-[#FF5722]/15 flex items-center justify-center shrink-0">
