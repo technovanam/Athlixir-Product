@@ -4,16 +4,12 @@ import { Zap } from "lucide-react";
 import { Card } from "@/components/ui";
 import { SCOUTING_STATS } from "@/lib/constants";
 
-/**
- * Scouting Reach Stats Card
- * Displays comparison between manual profile and Athlixir-powered reach
- */
 export default function ScoutingReachCard() {
   return (
     <Card className="w-[220px] animate-float">
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
-          <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
           <Zap className="w-4 h-4 text-primary" />
         </div>
         <span className="text-xs font-semibold tracking-wider text-white/80 uppercase">

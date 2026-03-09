@@ -3,10 +3,6 @@
 import { Check } from "lucide-react";
 import { Card } from "@/components/ui";
 
-/**
- * Verified Athlete ID Badge Card
- * Shows the verification status badge for athletes
- */
 export default function VerifiedBadge() {
   return (
     <Card
@@ -15,7 +11,7 @@ export default function VerifiedBadge() {
     >
       {/* Header */}
       <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
           <Check className="w-3 h-3 text-success" />
         </div>
         <span className="text-[10px] font-semibold tracking-wider text-white/80 uppercase">
@@ -29,7 +25,7 @@ export default function VerifiedBadge() {
         <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full bg-primary/60" />
         <div className="absolute top-0 right-4 w-1.5 h-1.5 rounded-full bg-primary/40" />
         <div className="absolute -top-1 right-8 w-1 h-1 rounded-full bg-primary/30" />
-        
+
         {/* Main Avatar Circle */}
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF5722] to-[#FF8A50] flex items-center justify-center shadow-lg shadow-primary/25">
           {/* Person Icon */}
@@ -46,7 +42,7 @@ export default function VerifiedBadge() {
             />
           </svg>
         </div>
-        
+
         {/* More Decorative Dots */}
         <div className="absolute -bottom-1 -left-2 w-1.5 h-1.5 rounded-full bg-primary/40" />
       </div>

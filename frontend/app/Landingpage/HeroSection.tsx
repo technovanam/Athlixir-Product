@@ -27,8 +27,8 @@ export default function HeroSection() {
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}
         transition={{
-          opacity: { duration: 0.8 },
-          x: { duration: 0.8 },
+          opacity: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+          x: { duration: 1, ease: [0.16, 1, 0.3, 1] },
           y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
         }}
         className="hidden xl:flex absolute left-6 xl:left-12 top-[30%] z-30 flex-col p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl w-56"
@@ -64,8 +64,8 @@ export default function HeroSection() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0, y: [0, 15, 0] }}
         transition={{
-          opacity: { duration: 0.8 },
-          x: { duration: 0.8 },
+          opacity: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+          x: { duration: 1, ease: [0.16, 1, 0.3, 1] },
           y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
         }}
         className="hidden xl:flex absolute right-6 xl:right-12 bottom-[25%] z-30 flex-col items-center p-6 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl w-56"
@@ -104,7 +104,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="px-5 py-2 rounded-full border border-primary/30 bg-primary/10 text-[11px] font-bold uppercase tracking-[0.25em] mb-10 text-primary backdrop-blur-sm"
         >
           AI-Powered Athlete Ecosystem
@@ -113,7 +113,7 @@ export default function HeroSection() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8 max-w-4xl tracking-tight"
         >
           Your Talent. <span className="text-secondary">Your Data.</span>
@@ -124,7 +124,7 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-base md:text-lg text-white/70 max-w-2xl mb-12 leading-relaxed font-light"
         >
           Empowering grassroots athletes with verified digital profiles,<br />
@@ -134,7 +134,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-5"
         >
           <Link
