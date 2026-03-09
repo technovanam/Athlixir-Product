@@ -221,15 +221,16 @@
   --illus-color-neutral: var(--surface-3);
   --illus-color-brand:   var(--primary);
   --illus-color-accent:  var(--success);
-  --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-decelerate: ease-out;
-  --transition-hover:  200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-focus:  150ms ease-out;
-  --transition-toggle: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spin:   800ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-lenis:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-decelerate: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-hover:  280ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-focus:  200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-toggle: 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spin:   900ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: var(--transition-focus);
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  --transition-base: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 550ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme {
@@ -292,7 +293,7 @@ html::-webkit-scrollbar {
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth removed — Lenis handles smooth scrolling */
   scroll-padding-top: 80px;
 }
 
