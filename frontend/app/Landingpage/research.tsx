@@ -15,7 +15,7 @@ const Research = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 1, ease: "easeOut" }}
+                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
                     className="relative rounded-[2.5rem] overflow-hidden shadow-2xl h-[550px] border border-white/10 group"
                 >
                     <img
@@ -42,7 +42,7 @@ const Research = () => {
                     initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="space-y-10"
                 >
                     <div className="inline-flex px-5 py-2 rounded-full border border-primary/30 bg-primary/10 text-[11px] font-bold uppercase tracking-[0.25em] mb-4 text-primary backdrop-blur-sm">

@@ -1,12 +1,18 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
+interface CarouselCard {
+    title: string;
+    label: string;
+    img: string;
+}
+
 const ExploreCarousel = () => {
-    const containerRef = useRef(null);
-    const trackRef = useRef(null);
+    const containerRef = useRef<HTMLElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
     const [translateX, setTranslateX] = useState(0);
 
     useEffect(() => {
@@ -27,9 +33,16 @@ const ExploreCarousel = () => {
         offset: ["start start", "end end"],
     });
 
-    const x = useTransform(scrollYProgress, [0, 1], [0, -translateX]);
+    // Smooth the scroll progress to match Lenis's ease-out feel
+    const smoothProgress = useSpring(scrollYProgress, {
+        stiffness: 80,
+        damping: 25,
+        restDelta: 0.001,
+    });
 
-    const cards = [
+    const x = useTransform(smoothProgress, [0, 1], [0, -translateX]);
+
+    const cards: CarouselCard[] = [
         { title: "Verified Digital Profile", label: "Identity", img: "https://images.unsplash.com/photo-1770368787714-4e5a5ea557fd?q=80&w=1170&auto=format&fit=crop" },
         { title: "Performance Analysis", label: "Tech", img: "https://plus.unsplash.com/premium_photo-1681487769650-a0c3fbaed85a?q=80&w=1255&auto=format&fit=crop" },
         { title: "Forgery Detection", label: "Security", img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80" },

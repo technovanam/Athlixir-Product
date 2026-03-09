@@ -2,9 +2,18 @@
 
 import { motion } from 'framer-motion';
 import { User, Trophy, BookOpen } from 'lucide-react';
+import React from 'react';
+
+interface Audience {
+    icon: React.ReactNode;
+    title: string;
+    label: string;
+    description: string;
+    bgImage: string;
+}
 
 const TargetAudience = () => {
-    const audiences = [
+    const audiences: Audience[] = [
         {
             icon: <User size={32} className="text-primary" />,
             title: "Student Athletes",
@@ -39,6 +48,7 @@ const TargetAudience = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="text-center mb-16 md:mb-28"
                 >
                     <div className="inline-flex px-5 py-2 rounded-full border border-primary/30 bg-primary/10 text-[11px] font-bold uppercase tracking-[0.25em] mb-6 text-primary backdrop-blur-sm">
@@ -57,7 +67,7 @@ const TargetAudience = () => {
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, duration: 0.6 }}
+                            transition={{ delay: index * 0.12, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                             className="relative group h-[520px] rounded-[2.5rem] overflow-hidden shadow-2xl cursor-pointer bg-white/[0.02] border border-white/10"
                         >
                             {/* Background Image */}
@@ -84,7 +94,7 @@ const TargetAudience = () => {
                                 </div>
                                 <h3 className="text-3xl font-black mb-4 text-white tracking-tight leading-tight">
                                     {item.title.split(' ')[0]} <br />
-                                    <span className="text-primary">{item.title.split(' ')[1] || ''}</span>
+                                    <span className="text-primary">{item.title.split(' ')[1] ?? ''}</span>
                                 </h3>
                                 <p className="text-gray-400 text-sm mb-10 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 font-light leading-relaxed">
                                     {item.description}

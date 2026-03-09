@@ -1,9 +1,20 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { ArrowRight, BarChart2, Shield, Zap, TrendingUp } from 'lucide-react';
+import { ArrowRight, BarChart2, Shield, Zap, TrendingUp, LucideIcon } from 'lucide-react';
+
+interface FeatureItem {
+    icon: LucideIcon;
+    text: string;
+}
 
 const Features = () => {
+    const items: FeatureItem[] = [
+        { icon: Shield, text: "Verified Injury History" },
+        { icon: Zap, text: "AI Progress Trends" },
+        { icon: TrendingUp, text: "Recruitment Portfolios" },
+    ];
+
     return (
         <section id="features" className="py-16 md:py-24 bg-background relative text-white overflow-hidden">
             {/* Background Gradient Overlays */}
@@ -18,7 +29,7 @@ const Features = () => {
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="p-8 md:p-12 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 relative overflow-hidden group shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col h-full"
                 >
                     {/* Enhanced Background Graphic to fill the gap */}
@@ -53,17 +64,13 @@ const Features = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 relative z-10">
                         <div className="space-y-4">
-                            {[
-                                { icon: Shield, text: "Verified Injury History" },
-                                { icon: Zap, text: "AI Progress Trends" },
-                                { icon: TrendingUp, text: "Recruitment Portfolios" }
-                            ].map((item, i) => (
+                            {items.map((item, i) => (
                                 <div key={i} className="flex items-center space-x-3">
                                     <item.icon className="w-4 h-4 text-primary" />
                                     <span className="text-sm text-gray-300 font-medium">{item.text}</span>
                                 </div>
                             ))}
-                        </div>  
+                        </div>
                     </div>
 
                     {/* Secondary visual - 'Active Probes' to fill the lower right gap */}
@@ -93,7 +100,7 @@ const Features = () => {
                     initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col justify-between h-full relative"
                 >
                     <div className="relative z-10 mb-8">
@@ -141,7 +148,7 @@ const Features = () => {
                                 <motion.div
                                     initial={{ width: 0 }}
                                     whileInView={{ width: "70%" }}
-                                    transition={{ duration: 1.5, delay: 0.5 }}
+                                    transition={{ duration: 1.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                     className="h-full bg-primary"
                                 />
                             </div>

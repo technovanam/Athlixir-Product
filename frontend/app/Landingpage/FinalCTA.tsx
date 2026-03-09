@@ -21,7 +21,7 @@ const FinalCTA = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="inline-flex px-5 py-2 rounded-full border border-primary/30 bg-primary/10 text-[11px] font-bold uppercase tracking-[0.25em] mb-10 text-primary backdrop-blur-sm"
                 >
                     Get Early Access
@@ -31,7 +31,7 @@ const FinalCTA = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
                     className="text-3xl md:text-5xl lg:text-6xl font-black mb-8 leading-[1.1] tracking-tight"
                 >
                     Ready to Build Your <br />

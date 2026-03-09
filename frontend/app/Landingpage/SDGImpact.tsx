@@ -1,10 +1,16 @@
 "use client";
 
-import { Heart, Activity, TrendingUp, Zap, Hexagon } from 'lucide-react';
+import { Heart, Activity, TrendingUp, Zap, Hexagon, LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+interface SDGGoal {
+    icon: LucideIcon;
+    title: string;
+    color: string;
+}
+
 const SDGImpact = () => {
-    const goals = [
+    const goals: SDGGoal[] = [
         { icon: Heart, title: "Good Health & Wellbeing", color: "text-rose-400" },
         { icon: Activity, title: "Gender Equality", color: "text-blue-400" },
         { icon: TrendingUp, title: "Economic Growth", color: "text-emerald-400" },
@@ -22,6 +28,7 @@ const SDGImpact = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="mb-20 md:mb-28"
                 >
                     <div className="inline-flex px-5 py-2 rounded-full border border-primary/30 bg-primary/10 text-[11px] font-bold uppercase tracking-[0.25em] mb-6 text-primary backdrop-blur-sm">
@@ -39,7 +46,7 @@ const SDGImpact = () => {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
+                            transition={{ delay: index * 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                             className="flex flex-col items-center group cursor-default"
                         >
                             <div className="w-24 h-24 bg-white/5 backdrop-blur-xl border border-white/10 text-gray-400 rounded-[2rem] flex items-center justify-center mb-6 transform transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,87,34,0.3)] group-hover:border-primary/50 group-hover:bg-primary/5">
