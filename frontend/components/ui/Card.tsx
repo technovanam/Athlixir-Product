@@ -16,7 +16,7 @@ export default function Card({
         "rounded-2xl p-6",
         glassmorphism
           ? "bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/20"
-          : "bg-[#1A1A1A] border border-white/5",
+          : "bg-surface-2 border border-white/5",
         className
       )}
     >

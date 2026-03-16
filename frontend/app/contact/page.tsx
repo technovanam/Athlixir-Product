@@ -24,9 +24,9 @@ export default function ContactPage() {
             <div className="absolute top-10 left-10">
                 <Link
                     href="/"
-                    className="flex items-center gap-2 text-gray-400 hover:text-white text-sm font-bold uppercase tracking-widest"
+                    className="flex items-center gap-2 text-secondary hover:text-white text-sm font-bold uppercase tracking-widest"
                 >
-                    <ArrowRight className="rotate-180 text-[#FF5722]" size={18} />
+                    <ArrowRight className="rotate-180 text-primary" size={18} />
                     Back to Home
                 </Link>
             </div>
@@ -41,15 +41,15 @@ export default function ContactPage() {
                     <h1 className="text-5xl md:text-6xl font-black text-white uppercase mb-4">
                         Get In Touch
                     </h1>
-                    <p className="text-gray-400 text-sm uppercase tracking-[0.3em]">
-                        We're here to <span className="text-[#FF5722]">help you</span>
+                    <p className="text-secondary text-sm uppercase tracking-[0.3em]">
+                        We're here to <span className="text-primary">help you</span>
                     </p>
                 </div>
 
                 {/* Contact Card with StarBorder */}
                 <StarBorder
                     as="div"
-                    color="#FF5722"
+                    color="var(--primary)"
                     speed="5s"
                     thickness={2}
                     className="w-full"
@@ -58,23 +58,23 @@ export default function ContactPage() {
                         {/* Contact Info */}
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
-                                <Mail className="text-[#FF5722] mt-1" size={20} />
+                                <Mail className="text-primary mt-1" size={20} />
                                 <div>
-                                    <h3 className="text-xs font-bold uppercase text-gray-500 mb-1">Email</h3>
+                                    <h3 className="text-xs font-bold uppercase text-muted mb-1">Email</h3>
                                     <p className="text-white">support@athlixir.com</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <Phone className="text-[#FF5722] mt-1" size={20} />
+                                <Phone className="text-primary mt-1" size={20} />
                                 <div>
-                                    <h3 className="text-xs font-bold uppercase text-gray-500 mb-1">Phone</h3>
+                                    <h3 className="text-xs font-bold uppercase text-muted mb-1">Phone</h3>
                                     <p className="text-white">+1 (555) 123-4567</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <MapPin className="text-[#FF5722] mt-1" size={20} />
+                                <MapPin className="text-primary mt-1" size={20} />
                                 <div>
-                                    <h3 className="text-xs font-bold uppercase text-gray-500 mb-1">Location</h3>
+                                    <h3 className="text-xs font-bold uppercase text-muted mb-1">Location</h3>
                                     <p className="text-white">India</p>
                                 </div>
                             </div>
@@ -85,21 +85,21 @@ export default function ContactPage() {
                             <input
                                 type="text"
                                 placeholder="Your Name"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-muted focus:outline-none focus:border-primary/50"
                             />
                             <input
                                 type="email"
                                 placeholder="Your Email"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-muted focus:outline-none focus:border-primary/50"
                             />
                             <textarea
                                 placeholder="Your Message"
                                 rows={4}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#FF5722]/50 resize-none"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder:text-muted focus:outline-none focus:border-primary/50 resize-none"
                             />
                             <button
                                 type="submit"
-                                className="w-full py-3 bg-[#FF5722] text-white font-bold rounded-xl hover:bg-[#E64A19] transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg"
+                                className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition flex items-center justify-center gap-3 uppercase tracking-widest shadow-lg"
                             >
                                 Send Message
                                 <ArrowRight size={20} />

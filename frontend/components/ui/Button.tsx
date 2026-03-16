@@ -5,7 +5,7 @@ import type { ButtonProps } from "@/types";
 /**
  * Primary Button component with variants
  * Supports primary, secondary, outline, and ghost variants
- * Font: Poppins Medium (500) as per design system
+ * Font: Barlow Condensed as per design system
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -23,13 +23,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium tracking-wide transition-all duration-250 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0A0A0A] disabled:opacity-50 disabled:cursor-not-allowed";
+      "inline-flex items-center justify-center font-medium tracking-wide transition-all duration-250 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-1 disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
       primary:
-        "bg-[#FF5722] text-white hover:bg-[#FF6B35] focus:ring-[#FF5722] shadow-lg hover:shadow-xl hover:shadow-[#FF5722]/20",
+        "bg-primary text-white hover:bg-primary-hover focus:ring-primary shadow-lg hover:shadow-xl hover:shadow-primary/20",
       secondary:
-        "bg-[#1A1A1A] text-white hover:bg-[#2A2A2A] focus:ring-[#1A1A1A] border border-white/10",
+        "bg-surface-2 text-white hover:bg-surface-3 focus:ring-surface-2 border border-white/10",
       outline:
         "bg-transparent text-white border-2 border-white/30 hover:border-white/60 hover:bg-white/5 focus:ring-white/30",
       ghost:
