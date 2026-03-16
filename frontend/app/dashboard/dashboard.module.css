@@ -1,0 +1,108 @@
+/* dashboard.module.css — responsive overrides only; all tokens come from globals.css */
+
+.sidebar {
+  display: none;
+}
+
+.searchWrap {
+  display: none;
+}
+
+.mobileMenuBtn {
+  display: flex;
+}
+
+/* md and up — show search bar */
+@media (min-width: 768px) {
+  .searchWrap {
+    display: block;
+    position: relative;
+  }
+}
+
+/* lg and up — show desktop sidebar, hide mobile hamburger */
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+  }
+
+  .mobileMenuBtn {
+    display: none;
+  }
+}
+
+/* Responsive grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-16);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-20);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-24);
+  }
+}
+
+/* Wide card spans full width on small, 2 cols on lg+ */
+.cardWide {
+  grid-column: span 1;
+}
+
+@media (min-width: 1024px) {
+  .cardWide {
+    grid-column: span 2;
+  }
+}
+
+/* Card hover */
+.card {
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Sidebar collapse toggle hover */
+.collapseBtn:hover {
+  transform: scale(1.1);
+}
+
+/* Nav link hover (can't do with inline style :hover well) */
+.navLink {
+  transition: all var(--transition-fast);
+}
+
+/* Bell btn hover */
+.bellBtn:hover {
+  color: var(--text-main);
+  border-color: var(--border-strong);
+}
+
+/* Content scroll */
+.content {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Search input focus */
+.searchInput:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  background: var(--surface-2);
+}

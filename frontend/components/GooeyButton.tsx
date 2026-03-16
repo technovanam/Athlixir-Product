@@ -143,7 +143,7 @@ const GooeyButton: React.FC<GooeyButtonProps> = ({
     return () => resizeObserver.disconnect();
   }, [active]);
 
-  const buttonClasses = `rounded-full relative cursor-pointer outline-none py-[0.6em] px-[1em] inline-block transition-[background-color_color_box-shadow_border-color] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white border border-white/20 hover:border-[#FF5722] ${active ? 'active' : ''}`;
+  const buttonClasses = `rounded-full relative cursor-pointer outline-none py-[0.6em] px-[1em] inline-block transition-[background-color_color_box-shadow_border-color] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white border border-white/20 hover:border-primary ${active ? 'active' : ''}`;
 
   return (
     <>

@@ -1,140 +1,74 @@
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import Logo from "./Logo";
-import HangingBulb from "./HangingBulb";
 
-/**
- * Footer component
- * Contains navigation links, social links, and the new illustrated layout
- */
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+    return (
+        <footer id="contact" className="bg-black text-white pt-24 pb-12 border-t border-white/10">
+            <div className="container mx-auto px-6 lg:px-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
 
-  return (
-    <footer className="relative bg-[#0A0A0A] border-t border-white/10 font-sans">
-      <HangingBulb />
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+                    {/* Brand Column */}
+                    <div className="space-y-8">
+                        <Logo />
+                        <p className="text-gray-400 leading-relaxed font-light text-sm pr-4">
+                            Empowering grassroots athletes with verified digital profiles, performance analytics, and real career opportunities.
+                        </p>
+                        <div className="flex space-x-3">
+                            {[Instagram, Twitter, Linkedin, Facebook].map((Icon, i) => (
+                                <a key={i} href="#" className="p-2.5 bg-white/5 border border-white/10 rounded-full hover:bg-primary hover:border-primary hover:text-white transition-all text-gray-400">
+                                    <Icon size={18} />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
 
-        {/* =======================
-            LEFT SIDE (Spans 7 cols)
-            ======================= */}
-        <div className="col-span-1 lg:col-span-7 flex flex-col border-b lg:border-b-0 lg:border-r border-white/10">
+                    {/* Quick Links */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Platform</h3>
+                        <ul className="space-y-4 text-gray-300 font-medium text-sm">
+                            <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Vision</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Research</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+                        </ul>
+                    </div>
 
-          {/* Top-Left: Logo & Description */}
-          <div className="p-10 md:p-16 border-b border-white/10 flex flex-col sm:flex-row gap-8 items-start justify-between min-h-[250px] lg:min-h-[300px]">
-            <Logo />
-            <p className="text-white/70 max-w-xs text-[14px] leading-relaxed font-light">
-              Because if your athletic tracking software can&apos;t keep up with your training intensity, neither will your performance.
-            </p>
-          </div>
+                    {/* For Users */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Ecosystem</h3>
+                        <ul className="space-y-4 text-gray-300 font-medium text-sm">
+                            <li><a href="#" className="hover:text-primary transition-colors">For Athletes</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">For Coaches</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">For Academies</a></li>
+                        </ul>
+                    </div>
 
-          {/* Bottom-Left: Links & Small Avatars */}
-          <div className="p-10 md:p-16 flex-grow relative overflow-hidden flex flex-col justify-between min-h-[450px]">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-12 mb-32 relative z-10 w-full max-w-2xl">
-              {/* Resources */}
-              <div className="flex flex-col space-y-5">
-                <h4 className="text-white font-bold text-base tracking-wide">Resources</h4>
-                <ul className="space-y-3 font-light text-white/60 text-sm">
-                  <li><Link href="#features" className="hover:text-white transition-colors">Why Athlixir?</Link></li>
-                  <li><Link href="#case-studies" className="hover:text-white transition-colors">Case Studies</Link></li>
-                  <li><Link href="#blog" className="hover:text-white transition-colors">Training Blog</Link></li>
-                  <li><Link href="#guides" className="hover:text-white transition-colors">Coaching Guides</Link></li>
-                  <li><Link href="#webinars" className="hover:text-white transition-colors">Webinars</Link></li>
-                  <li><Link href="#glossary" className="hover:text-white transition-colors">Glossary</Link></li>
-                </ul>
-              </div>
+                    {/* Newsletter */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Stay Updated</h3>
+                        <p className="text-gray-400 mb-6 text-sm font-light">Join our newsletter for the latest updates.</p>
+                        <form className="flex flex-col space-y-4">
+                            <input
+                                type="email"
+                                placeholder="Enter your email"
+                                className="bg-white/5 border border-white/10 rounded-lg px-5 py-3.5 text-white focus:outline-none focus:border-primary/50 transition-colors placeholder-gray-600 text-sm"
+                            />
+                            <button className="px-5 py-3.5 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors shadow-lg text-xs uppercase tracking-widest">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
 
-              {/* Company */}
-              <div className="flex flex-col space-y-5">
-                <h4 className="text-white font-bold text-base tracking-wide">Company</h4>
-                <ul className="space-y-3 font-light text-white/60 text-sm">
-                  <li><Link href="#about" className="hover:text-white transition-colors">About Us</Link></li>
-                  <li><Link href="#careers" className="hover:text-white transition-colors">Careers</Link></li>
-                  <li><Link href="#leadership" className="hover:text-white transition-colors">Leadership</Link></li>
-                  <li><Link href="#partners" className="hover:text-white transition-colors">Partners</Link></li>
-                  <li><Link href="#press" className="hover:text-white transition-colors">Press</Link></li>
-                  <li><Link href="#contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-                </ul>
-              </div>
+                </div>
 
-              {/* Social */}
-              <div className="flex flex-col space-y-5">
-                <h4 className="text-white font-bold text-base tracking-wide">Social</h4>
-                <ul className="space-y-3 font-light text-white/60 text-sm">
-                  <li><Link href="#" className="hover:text-white transition-colors">LinkedIn</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">Twitter</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">Facebook</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">Instagram</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">YouTube</Link></li>
-                </ul>
-              </div>
+                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-medium tracking-wide">
+                    <p>© 2026 Athlixir | Built with purpose.</p>
+                    <div className="flex space-x-8 mt-4 md:mt-0">
+                        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+                    </div>
+                </div>
             </div>
-
-            {/* Little Coach & Player Discussion Avatar Layer */}
-            <div className="absolute bottom-0 left-[10%] md:left-[25%] lg:left-[20%] w-[380px] md:w-[480px] h-[350px] pointer-events-none opacity-90 transition-transform duration-500 hover:scale-105 z-0">
-              <Image
-                src="/images/athlete_coach_discussion.png"
-                alt="Coach & Player Discussion"
-                fill
-                className="object-contain object-bottom"
-                quality={100}
-              />
-            </div>
-
-            {/* Bottom Links Bar */}
-            <div className="flex flex-col sm:flex-row gap-5 text-xs text-white/50 font-medium relative z-10 w-full lg:mb-0 mb-4 items-center sm:items-baseline">
-              <span className="font-bold text-white/70">© {currentYear} Athlixir Inc.</span>
-              <Link href="/support" className="hover:text-white transition-colors ml-0 sm:ml-4">Support</Link>
-              <Link href="/privacy" className="hover:text-white transition-colors hidden sm:inline-block">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors hidden sm:inline-block">Terms of Use</Link>
-              <Link href="/cookies" className="hover:text-white transition-colors hidden sm:inline-block">Cookie Policy</Link>
-            </div>
-          </div>
-        </div>
-
-        {/* =======================
-            RIGHT SIDE (Spans 5 cols)
-            ======================= */}
-        <div className="col-span-1 lg:col-span-5 relative overflow-hidden flex flex-col bg-[#0f0f0f] z-10">
-          <div className="p-10 md:p-16 relative z-10">
-            <span className="text-[#FF5722] text-xs font-black tracking-[0.2em] uppercase mb-4 block">
-              Join Ecosystem
-            </span>
-            <h2 className="text-5xl md:text-6xl xl:text-7xl font-semibold tracking-tight text-white mb-12 leading-[1.05]">
-              Request a<br />Demo
-            </h2>
-
-            {/* Input Form Group */}
-            <div className="relative max-w-sm xl:max-w-md w-full">
-              <input
-                type="email"
-                placeholder="Enter your email..."
-                className="w-full bg-white text-black font-medium rounded-full py-4 pl-6 pr-[72px] focus:outline-none focus:ring-4 focus:ring-[#FF5722]/40 shadow-xl transition-all"
-              />
-              <button
-                className="absolute right-1 top-1 bottom-1 aspect-square bg-[#FF5722] rounded-full flex items-center justify-center hover:bg-[#E64D1F] transition-colors shadow-md group"
-                aria-label="Submit Email"
-              >
-                <ArrowRight className="text-white w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
-
-          {/* Large Hero Athlete Avatar Layer */}
-          <div className="absolute right-[-10%] bottom-0 top-[35%] w-full min-w-[300px] pointer-events-none z-0">
-            <Image
-              src="/images/athlete_hero_avatar.png"
-              alt="Athlete performing analytics"
-              fill
-              className="object-contain object-bottom md:object-right-bottom scale-110 origin-bottom-right"
-              quality={100}
-              priority
-            />
-          </div>
-        </div>
-
-      </div>
-    </footer>
-  );
+        </footer>
+    );
 }

@@ -11,13 +11,13 @@ export default function Badge({
 }: BadgeProps) {
   const variants = {
     default:
-      "bg-[#FF5722]/10 text-[#FF5722] border-[#FF5722]/30",
+      "bg-primary/10 text-primary border-primary/30",
     success:
-      "bg-green-500/10 text-green-400 border-green-500/30",
+      "bg-success/10 text-success border-success/30",
     warning:
-      "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+      "bg-warning/10 text-warning border-warning/30",
     error:
-      "bg-red-500/10 text-red-400 border-red-500/30",
+      "bg-error/10 text-error border-error/30",
   };
 
   return (

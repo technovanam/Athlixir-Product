@@ -1,220 +1,190 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { NAV_LINKS } from "@/lib/constants";
-import { Button } from "@/components/ui";
+import { motion, AnimatePresence } from "framer-motion";
 import Logo from "./Logo";
+import { NAV_LINKS } from "@/lib/constants";
 
-/**
- * Header component with navigation
- * Includes sticky behavior, scroll-based styling, and mobile menu
- */
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [sliderStyle, setSliderStyle] = useState({ left: 0, width: 0 });
-  const [mounted, setMounted] = useState(false);
-  const [activeSection, setActiveSection] = useState("#home");
-  const navRef = useRef<HTMLDivElement>(null);
+  const [activeSection, setActiveSection] = useState("home");
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
-  // Set mounted state
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Handle scroll effect and active section detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
-      
-      // Detect active section based on scroll position
-      const sections = NAV_LINKS.filter(link => link.href.startsWith('#')).map(link => link.href.replace("#", ""));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i]);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 150) {
-            setActiveSection(`#${sections[i]}`);
-            break;
-          }
+
+      const scrollPosition = window.scrollY + 150;
+      NAV_LINKS.forEach((link) => {
+        const sectionId = link.href.substring(1);
+        const section = document.getElementById(sectionId);
+        if (
+          section &&
+          scrollPosition >= section.offsetTop &&
+          scrollPosition < section.offsetTop + section.offsetHeight
+        ) {
+          setActiveSection(sectionId);
         }
+      });
+
+      if (window.scrollY < 100) {
+        setActiveSection("home");
       }
     };
 
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on section change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [activeSection]);
-
-  // Update slider position
-  useEffect(() => {
-    if (!mounted) return;
-    
-    const updateSlider = () => {
-      if (navRef.current) {
-        const activeLink = navRef.current.querySelector('[data-active="true"]') as HTMLElement;
-        if (activeLink) {
-          const navRect = navRef.current.getBoundingClientRect();
-          const linkRect = activeLink.getBoundingClientRect();
-          setSliderStyle({
-            left: linkRect.left - navRect.left,
-            width: linkRect.width,
-          });
-        }
-      }
-    };
-    
-    // Run immediately and also after a small delay for initial render
-    updateSlider();
-    const timer = setTimeout(updateSlider, 100);
-    window.addEventListener("resize", updateSlider);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateSlider);
-    };
-  }, [activeSection, mounted]);
-
-  // Smooth scroll handler
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    
-    // Check if it's a route or hash
-    if (href.startsWith('/')) {
-      // Navigate to route
-      window.location.href = href;
-    } else {
-      // Scroll to section
-      const targetId = href.replace("#", "");
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-        setActiveSection(href);
-      }
-    }
-  };
-
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "backdrop-blur-md py-4"
-          : "bg-transparent py-6"
-      )}
+          ? "bg-black/40 backdrop-blur-2xl shadow-xl h-16"
+          : "bg-transparent h-20"
+      }`}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <nav className="relative flex items-center justify-between">
-          {/* Logo */}
-          <Logo />
+      <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between h-full">
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
-            <div ref={navRef} className="flex items-center gap-10 relative pt-3">
-              {/* Sliding Indicator - positioned above nav items */}
-              <span
-                className={cn(
-                  "absolute top-0 h-1 bg-[#FF5722] rounded-b-sm z-50",
-                  "transition-[left,width] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  mounted && sliderStyle.width > 0 ? "opacity-100" : "opacity-0"
-                )}
-                style={{ 
-                  left: sliderStyle.left, 
-                  width: sliderStyle.width,
-                  transform: 'translateZ(0)'
+        {/* Logo */}
+        <Logo
+          onClick={() => {
+            if (isHomePage) {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setActiveSection("home");
+            }
+          }}
+        />
+
+        {/* Desktop Nav Links */}
+        <div className="hidden lg:flex items-center h-full space-x-2">
+          {NAV_LINKS.map((link) => {
+            const sectionId = link.href.substring(1);
+            const isActive = activeSection === sectionId;
+
+            return (
+              <a
+                key={link.name}
+                href={isHomePage ? link.href : `/${link.href}`}
+                onClick={() => {
+                  if (isHomePage) setActiveSection(sectionId);
                 }}
-              />
+                className={`relative h-full flex items-center px-4 text-sm font-medium transition-colors duration-300 hover:text-primary ${
+                  isActive
+                    ? "text-primary"
+                    : isScrolled
+                    ? "text-white/70"
+                    : "text-white/90"
+                }`}
+              >
+                {isActive && isHomePage && (
+                  <motion.span
+                    layoutId="navActiveBar"
+                    className="absolute top-0 left-0 right-0 h-[3px] bg-primary rounded-b-full"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                {link.name}
+              </a>
+            );
+          })}
+        </div>
+
+        {/* Desktop CTA Buttons */}
+        <div className="hidden lg:flex items-center space-x-4">
+          <Link
+            href="/login"
+            className={`px-5 py-2.5 text-sm font-medium border rounded-full transition-all ${
+              isScrolled
+                ? "border-white/20 text-white hover:bg-white/10"
+                : "border-white/30 text-white hover:bg-white/10"
+            }`}
+          >
+            Login
+          </Link>
+          <Link
+            href="/signup"
+            className="px-5 py-2.5 text-sm font-medium bg-primary text-white rounded-full hover:bg-primary-hover transition-all shadow-[0_0_15px_rgba(255,87,34,0.3)] hover:shadow-[0_0_20px_rgba(255,87,34,0.5)]"
+          >
+            Get Started
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="lg:hidden p-2"
+          onClick={() => setIsMobileMenuOpen(true)}
+        >
+          <Menu className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      {/* Mobile Slide-in Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-2xl z-50 flex flex-col p-6 lg:hidden"
+          >
+            <div className="flex justify-between items-center mb-12">
+              <Logo />
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2"
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+            </div>
+
+            <div className="flex flex-col space-y-6">
               {NAV_LINKS.map((link) => (
                 <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  data-active={activeSection === link.href}
-                  className={cn(
-                    "relative text-[15px] font-medium transition-colors duration-200 hover:text-[#FF5722] py-2 cursor-pointer",
-                    activeSection === link.href
-                      ? "text-[#FF5722]"
+                  key={link.name}
+                  href={isHomePage ? link.href : `/${link.href}`}
+                  className={`text-xl font-bold ${
+                    activeSection === link.href.substring(1)
+                      ? "text-primary"
                       : "text-white/80"
-                  )}
+                  }`}
+                  onClick={() => {
+                    if (isHomePage) setActiveSection(link.href.substring(1));
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   {link.name}
                 </a>
               ))}
-            </div>
-          </div>
 
-          {/* Desktop CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
-            <Link href="/login">
-              <Button variant="outline" size="sm">
-                LOGIN
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button variant="primary" size="sm">
-                GET STARTED
-              </Button>
-            </Link>
-          </div>
+              <hr className="border-white/10 my-4" />
 
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-white hover:text-[#FF5722] transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </nav>
-
-        {/* Mobile Menu */}
-        <div
-          className={cn(
-            "lg:hidden overflow-hidden transition-all duration-300",
-            isMobileMenuOpen ? "max-h-[400px] opacity-100 mt-6" : "max-h-0 opacity-0"
-          )}
-        >
-          <div className="flex flex-col gap-4 py-4 border-t border-white/10">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className={cn(
-                  "text-base font-medium py-2 transition-colors duration-200 hover:text-[#FF5722] cursor-pointer",
-                  activeSection === link.href
-                    ? "text-[#FF5722]"
-                    : "text-white/80"
-                )}
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full py-3 border border-white/20 rounded-lg text-white uppercase text-xs flex items-center justify-center"
               >
-                {link.name}
-              </a>
-            ))}
-            <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
-              <Link href="/login">
-                <Button variant="outline" size="md" className="w-full">
-                  LOGIN
-                </Button>
+                Login
               </Link>
-              <Link href="/signup">
-                <Button variant="primary" size="md" className="w-full">
-                  GET STARTED
-                </Button>
+
+              <Link
+                href="/signup"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full py-3 bg-primary text-white rounded-lg uppercase text-xs flex items-center justify-center"
+              >
+                Get Started
               </Link>
             </div>
-          </div>
-        </div>
-      </div>
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 }

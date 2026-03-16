@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Lock, User, ArrowRight, ShieldCheck, Loader2,
+  User, ArrowRight, Loader2,
   Trophy, Users, Target, Phone, CheckCircle2, X,
 } from "lucide-react";
 
@@ -17,8 +17,6 @@ type Role = "athlete" | "coach" | "user";
 interface SignupFormData {
   fullName: string;
   phone: string;
-  password: string;
-  confirmPassword: string;
   role: Role;
   otp: string;
 }
@@ -36,7 +34,7 @@ const ROLES: { id: Role; label: string; icon: React.ElementType }[] = [
 // Input class
 // ---------------------------------------------------------------------------
 const signupInputCls =
-  "w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-16 pr-6 text-white placeholder:text-gray-700 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.08] transition-all text-base";
+  "w-full bg-white/5 border border-white/10 rounded-lg py-4 pl-16 pr-6 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all text-base";
 
 // ---------------------------------------------------------------------------
 // Signup Page
@@ -47,8 +45,6 @@ export default function SignupPage() {
   const [formData, setFormData] = useState<SignupFormData>({
     fullName: "",
     phone: "",
-    password: "",
-    confirmPassword: "",
     role: "athlete",
     otp: "",
   });
@@ -61,6 +57,7 @@ export default function SignupPage() {
   const [otpError, setOtpError]     = useState<string>("");
   const [showOtpModal, setShowOtpModal] = useState<boolean>(false);
   const [otpDigits, setOtpDigits]   = useState<string[]>(["", "", "", "", "", ""]);
+  const [resendTimer, setResendTimer] = useState<number>(0);
   const otpRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -76,6 +73,12 @@ export default function SignupPage() {
     return () => clearTimeout(timer);
   }, [error]);
 
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const t = setTimeout(() => setResendTimer((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendTimer]);
+
   const set = <K extends keyof SignupFormData>(key: K, value: SignupFormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }));
 
@@ -89,6 +92,7 @@ export default function SignupPage() {
       setOtpDigits(["", "", "", "", "", ""]);
       set("otp", "");
       setShowOtpModal(true);
+      setResendTimer(60);
     } catch {
       setOtpError("Failed to send OTP. Try again.");
     } finally {
@@ -120,17 +124,13 @@ export default function SignupPage() {
     if (!phoneVerified) {
       return setError("Please verify your phone number before continuing.");
     }
-    if (formData.password !== formData.confirmPassword) {
-      return setError("Passwords do not match");
-    }
-    if (formData.password.length < 6) {
-      return setError("Password must be at least 6 characters");
-    }
 
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       localStorage.setItem("athlixir_signup_name", formData.fullName);
+      localStorage.setItem("athlixir_signup_phone", formData.phone);
+      localStorage.setItem("athlixir_signup_role", formData.role);
       if (formData.role === "coach") {
         router.push("/coach/dashboard");
       } else if (formData.role === "user") {
@@ -146,7 +146,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#050505]">
+    <div className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background">
 
       {/* OTP Modal */}
       <AnimatePresence>
@@ -163,7 +163,7 @@ export default function SignupPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-sm bg-[#0f0f0f] border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+              className="relative w-full bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.8)]" style={{ maxWidth: "360px" }}
             >
               <button
                 type="button"
@@ -174,15 +174,15 @@ export default function SignupPage() {
               </button>
 
               <div className="flex justify-center mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                  <Phone size={26} className="text-orange-500" />
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                  <Phone size={26} className="text-primary" />
                 </div>
               </div>
 
               <h2 className="text-white font-black text-xl uppercase tracking-widest text-center mb-1">Verify Phone</h2>
               <p className="text-gray-500 text-[11px] text-center uppercase tracking-widest mb-6">
                 Enter the 6-digit OTP sent to<br />
-                <span className="text-orange-400 font-bold">+91 {formData.phone}</span>
+                <span className="text-primary font-bold">+91 {formData.phone}</span>
               </p>
 
               <div className="flex justify-center gap-3 mb-4">
@@ -217,13 +217,13 @@ export default function SignupPage() {
                     }}
                     disabled={otpLoading}
                     suppressHydrationWarning
-                    className="w-10 h-10 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-orange-500 focus:bg-white/8 transition-all"
+                    className="w-10 h-10 text-center text-xl font-black text-white bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary focus:bg-white/[0.08] transition-all"
                   />
                 ))}
               </div>
 
               {otpError && (
-                <p className="text-red-400 text-[10px] font-bold uppercase tracking-widest text-center mb-4">{otpError}</p>
+                <p className="text-error text-[10px] font-bold uppercase tracking-widest text-center mb-4">{otpError}</p>
               )}
 
               <button
@@ -231,21 +231,27 @@ export default function SignupPage() {
                 onClick={handleVerifyOtp}
                 disabled={otpLoading || otpDigits.join("").length < 6}
                 suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2"
+                className="w-3/4 mx-auto py-4 bg-primary hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,87,34,0.3)]"
               >
                 {otpLoading ? <Loader2 size={18} className="animate-spin" /> : "Verify OTP"}
               </button>
 
               <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest mt-4">
                 Didn&apos;t receive?{" "}
-                <button
-                  type="button"
-                  onClick={handleSendOtp}
-                  disabled={otpLoading}
-                  className="text-orange-500 font-black hover:text-orange-400 transition-colors"
-                >
-                  Resend
-                </button>
+                {resendTimer > 0 ? (
+                  <span className="text-primary font-black">
+                    Resend in {Math.floor(resendTimer / 60)}:{String(resendTimer % 60).padStart(2, "0")}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleSendOtp()}
+                    disabled={otpLoading}
+                    className="text-primary font-black hover:text-orange-400 transition-colors"
+                  >
+                    Resend
+                  </button>
+                )}
               </p>
             </motion.div>
           </motion.div>
@@ -253,14 +259,14 @@ export default function SignupPage() {
       </AnimatePresence>
 
       {/* Background */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80"
           alt="Athlete Training"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/75" />
-        <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
       </div>
 
       {/* Back button */}
@@ -273,7 +279,7 @@ export default function SignupPage() {
           href="/"
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
         >
-          <ArrowRight className="rotate-180 text-orange-500" size={18} />
+          <ArrowRight className="rotate-180 text-primary" size={18} />
           Back to Home
         </Link>
       </motion.div>
@@ -286,16 +292,20 @@ export default function SignupPage() {
         className="w-full max-w-175 px-6 relative z-10"
       >
         <div className="flex flex-col items-center mb-6">
-          <h1 className="text-4xl font-black text-white mb-2 uppercase text-center leading-tight tracking-[0.05em]">
-            Join the Ecosystem
-          </h1>
+          <Link href="/" className="mb-4">
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <polygon points="26,4 6,48 14,48 26,18" fill="#FF5722" />
+              <polygon points="26,4 46,48 38,48 26,18" fill="#E64A19" />
+              <rect x="14" y="30" width="24" height="5" rx="1" fill="#FF5722" />
+            </svg>
+          </Link>
+          <h1 className="text-4xl font-black text-white mb-2 uppercase text-center leading-tight tracking-[0.05em]">Join the Ecosystem</h1>
           <p className="text-gray-400 text-center text-[10px] font-black uppercase tracking-[0.3em]">
-            Create your verified{" "}
-            <span className="text-orange-500 font-bold">digital profile</span>
+            Create your verified <span className="text-primary font-bold">digital profile</span>
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[3rem] overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <div className="flex flex-col md:flex-row bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.5)]">
 
           {/* Vertical Role Switcher */}
           <div className="w-full md:w-32 bg-white/5 border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col justify-around md:justify-center p-4 gap-4">
@@ -305,10 +315,10 @@ export default function SignupPage() {
                 type="button"
                 onClick={() => set("role", id)}
                 suppressHydrationWarning
-                className={`flex flex-col items-center justify-center py-4 px-2 rounded-2xl transition-all flex-1 md:flex-none ${
+                className={`flex flex-col items-center justify-center py-4 px-2 rounded-lg transition-all flex-1 md:flex-none ${
                   formData.role === id
-                    ? "bg-orange-500 text-white shadow-[0_0_20px_rgba(249,115,22,0.3)]"
-                    : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
+                    ? "bg-primary text-white shadow-[0_0_20px_rgba(255,87,34,0.25)]"
+                    : "text-muted hover:text-secondary hover:bg-white/5"
                 }`}
               >
                 <Icon size={24} className="mb-2" />
@@ -331,7 +341,7 @@ export default function SignupPage() {
                   transition={{ duration: 0.25, ease: "easeOut" }}
                   className="mb-6 overflow-hidden"
                 >
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs font-bold uppercase tracking-widest text-center">
+                  <div className="p-4 bg-error/10 border border-error/20 rounded-xl text-error text-xs font-bold uppercase tracking-widest text-center">
                     {error}
                   </div>
                 </motion.div>
@@ -342,11 +352,11 @@ export default function SignupPage() {
 
               {/* Full Name */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted ml-1">
                   Full Identity Name
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
+                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-disabled group-focus-within:text-primary transition-colors">
                     <User size={18} />
                   </div>
                   <input
@@ -364,14 +374,14 @@ export default function SignupPage() {
 
               {/* Phone Number */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted ml-1">
                   Phone Number
                 </label>
-                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-2xl focus-within:border-orange-500/50 focus-within:bg-white/8 transition-all overflow-hidden">
-                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors shrink-0 border-r border-white/10">
+                <div className="relative group flex items-center bg-white/5 border border-white/10 rounded-lg focus-within:border-primary/50 focus-within:bg-white/[0.08] transition-all overflow-hidden">
+                  <div className="pl-6 pr-4 flex items-center pointer-events-none text-disabled group-focus-within:text-primary transition-colors shrink-0 border-r border-white/10">
                     <Phone size={18} />
                   </div>
-                  <span className="pl-4 pr-1 py-4 text-gray-700 text-base select-none shrink-0">
+                  <span className="pl-4 pr-1 py-4 text-muted text-base select-none shrink-0">
                     +91
                   </span>
                   <input
@@ -379,7 +389,7 @@ export default function SignupPage() {
                     inputMode="numeric"
                     maxLength={10}
                     placeholder="XXXXX XXXXX"
-                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-gray-700 focus:outline-none text-base"
+                    className="flex-1 bg-transparent py-4 pl-4 pr-4 text-white placeholder:text-muted focus:outline-none text-base"
                     value={formData.phone}
                     onChange={(e) => {
                       const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
@@ -392,93 +402,54 @@ export default function SignupPage() {
                     disabled={loading || phoneVerified}
                     suppressHydrationWarning
                   />
-                  <div className="pr-3 flex items-center shrink-0">
-                    {phoneVerified ? (
-                      <span className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                  {phoneVerified && (
+                    <div className="pr-4 flex items-center shrink-0">
+                      <span className="flex items-center gap-1.5 text-success text-[10px] font-black uppercase tracking-widest">
                         <CheckCircle2 size={16} className="shrink-0" />
                         Verified
                       </span>
-                    ) : formData.phone.length >= 10 ? (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={otpLoading || loading}
-                        suppressHydrationWarning
-                        className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
-                      >
-                        {otpLoading && !otpSent ? (
-                          <Loader2 size={14} className="animate-spin" />
-                        ) : otpSent ? "Resend" : "Verify"}
-                      </button>
-                    ) : null}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Password + Confirm */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                    Access Key
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                      <Lock size={18} />
-                    </div>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className={signupInputCls}
-                      value={formData.password}
-                      onChange={(e) => set("password", e.target.value)}
-                      required
-                      disabled={loading}
-                      suppressHydrationWarning
-                    />
-                  </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1">
-                    Confirm Key
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-orange-500 transition-colors">
-                      <ShieldCheck size={18} />
-                    </div>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className={signupInputCls}
-                      value={formData.confirmPassword}
-                      onChange={(e) => set("confirmPassword", e.target.value)}
-                      required
-                      disabled={loading}
-                      suppressHydrationWarning
-                    />
-                  </div>
-                </div>
-              </div>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={loading}
-                suppressHydrationWarning
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_40px_rgba(249,115,22,0.5)] flex items-center justify-center gap-3 group mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    Create Profile
-                    <ArrowRight
-                      size={18}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
-                  </>
-                )}
-              </button>
+              {/* Submit / Verify */}
+              {!phoneVerified ? (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpLoading || !formData.fullName || formData.phone.length < 10}
+                  suppressHydrationWarning
+                  className="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {otpLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Verify Phone
+                      <Phone size={18} />
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  suppressHydrationWarning
+                  className="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-orange-600 transition-all shadow-[0_10px_30px_rgba(255,87,34,0.3)] hover:shadow-[0_15px_40px_rgba(255,87,34,0.5)] flex items-center justify-center gap-3 group mt-6 uppercase tracking-widest text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Create Profile
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+              )}
             </form>
           </div>
         </div>
@@ -487,7 +458,7 @@ export default function SignupPage() {
           Already an Athlete?{" "}
           <Link
             href="/login"
-            className="text-orange-500 font-black hover:text-orange-400 transition-colors uppercase ml-1"
+            className="text-primary font-black hover:text-orange-400 transition-colors uppercase ml-1"
           >
             Access Portal
           </Link>

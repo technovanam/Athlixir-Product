@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
+import LenisProvider from "@/components/LenisProvider";
 
-/**
- * Primary Font: Poppins
- * Weights: 300 (Light), 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
- * Usage: All UI elements - headings, body, buttons, navigation, forms, etc.
- */
-const poppins = Poppins({
-  variable: "--font-poppins",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["wdth"],
   display: "swap",
 });
 
@@ -56,9 +52,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${poppins.variable} antialiased bg-[#0A0A0A] text-white font-sans min-h-screen flex flex-col overflow-x-hidden`}
+        className={`${archivo.variable} antialiased bg-background text-white font-sans min-h-screen flex flex-col overflow-x-hidden scrollbar-none`}
       >
-        {children}
+        <LenisProvider>
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
