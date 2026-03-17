@@ -2,39 +2,63 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Shield, Check, Zap } from "lucide-react";
+import { Shield, Check, Zap, Play } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 export default function HeroSection() {
-  return (
-    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background">
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-      {/* Background Video */}
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      const handleLoadedData = () => setIsVideoLoaded(true);
+      video.addEventListener('loadeddata', handleLoadedData);
+      return () => video.removeEventListener('loadeddata', handleLoadedData);
+    }
+  }, []);
+
+  return (
+    <section 
+      id="home" 
+      className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background"
+      aria-label="Hero section with video background"
+    >
+      {/* Background Video with Loading State */}
       <div className="absolute inset-0 z-0">
+        {!isVideoLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-surface-1 to-background flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+          </div>
+        )}
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          ref={videoRef}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            isVideoLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           src="/video/120447-720880542_medium.mp4"
           autoPlay
           loop
           muted
           playsInline
+          preload="metadata"
+          aria-hidden="true"
         />
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
       </div>
 
-      {/* Floating Card Left: Scouting Reach */}
+      {/* Optimized Floating Cards */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0, y: [0, -12, 0] }}
-        transition={{
-          opacity: { duration: 1, ease: [0.16, 1, 0.3, 1] },
-          x: { duration: 1, ease: [0.16, 1, 0.3, 1] },
-          y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-        }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="hidden xl:flex absolute left-6 xl:left-12 top-[30%] z-30 flex-col p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl w-56"
+        role="complementary"
+        aria-label="Scouting reach statistics"
       >
         <div className="flex items-center space-x-2 mb-3">
-          <Zap className="w-3 h-3 text-primary" />
+          <Zap className="w-3 h-3 text-primary" aria-hidden="true" />
           <span className="text-[10px] uppercase tracking-widest text-secondary font-bold">Scouting Reach</span>
         </div>
 
@@ -43,7 +67,7 @@ export default function HeroSection() {
             <span className="text-xl font-bold text-muted leading-none">12%</span>
             <span className="text-[8px] uppercase tracking-wider text-muted font-bold">Manual Profile</span>
           </div>
-          <div className="w-8 h-4 bg-white/5 rounded-full relative">
+          <div className="w-8 h-4 bg-white/5 rounded-full relative" role="progressbar" aria-valuenow={12} aria-valuemin={0} aria-valuemax={100}>
             <div className="absolute left-1 top-1 w-2 h-2 bg-white/30 rounded-full" />
           </div>
         </div>
@@ -53,31 +77,28 @@ export default function HeroSection() {
             <span className="text-xl font-bold text-primary leading-none">94%</span>
             <span className="text-[8px] uppercase tracking-wider text-white font-bold">Athlixir Powered</span>
           </div>
-          <div className="w-8 h-4 bg-primary/20 rounded-full relative">
+          <div className="w-8 h-4 bg-primary/20 rounded-full relative" role="progressbar" aria-valuenow={94} aria-valuemin={0} aria-valuemax={100}>
             <div className="absolute right-1 top-1 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(255,87,34,0.6)]" />
           </div>
         </div>
       </motion.div>
 
-      {/* Floating Card Right: Verified Athlete ID */}
       <motion.div
         initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0, y: [0, 15, 0] }}
-        transition={{
-          opacity: { duration: 1, ease: [0.16, 1, 0.3, 1] },
-          x: { duration: 1, ease: [0.16, 1, 0.3, 1] },
-          y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
-        }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         className="hidden xl:flex absolute right-6 xl:right-12 bottom-[25%] z-30 flex-col items-center p-6 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl w-56"
+        role="complementary"
+        aria-label="Verified athlete ID status"
       >
         <div className="flex items-center space-x-2 mb-6 self-start">
           <div className="p-1 bg-primary/20 rounded-full">
-            <Check className="w-3 h-3 text-primary" />
+            <Check className="w-3 h-3 text-primary" aria-hidden="true" />
           </div>
           <span className="text-[10px] uppercase tracking-widest text-secondary font-bold">Verified Athlete ID</span>
         </div>
 
-        <div className="relative">
+        <div className="relative" aria-hidden="true">
           {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
@@ -92,15 +113,14 @@ export default function HeroSection() {
           ))}
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center relative z-10">
             <div className="w-14 h-14 bg-gradient-to-br from-primary to-[#E64A19] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,87,34,0.4)]">
-              <Shield className="w-7 h-7 text-white" fill="white" />
+              <Shield className="w-7 h-7 text-white" fill="white" aria-hidden="true" />
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Center Content */}
+      {/* Main Content */}
       <div className="relative z-20 container mx-auto px-6 lg:px-12 flex flex-col items-center justify-center h-full text-white text-center">
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,18 +159,20 @@ export default function HeroSection() {
         >
           <Link
             href="/signup"
-            className="px-10 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-hover transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-sm uppercase tracking-widest hover:scale-105 flex items-center justify-center"
+            className="group px-10 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-hover transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-sm uppercase tracking-widest hover:scale-105 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+            aria-label="Sign up to get started with Athlixir"
           >
-            Get Started
+            <span>Get Started</span>
+            <Play className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
           <Link
             href="/login"
-            className="px-10 py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-black transition-all text-sm uppercase tracking-widest hover:scale-105 flex items-center justify-center"
+            className="px-10 py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-black transition-all text-sm uppercase tracking-widest hover:scale-105 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background"
+            aria-label="Explore the Athlixir platform"
           >
             Explore Platform
           </Link>
         </motion.div>
-
       </div>
     </section>
   );

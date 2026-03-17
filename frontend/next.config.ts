@@ -12,6 +12,20 @@ const nextConfig: NextConfig = {
     qualities: [75, 95, 100],
     minimumCacheTTL: 60,
     unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 
