@@ -94,9 +94,16 @@
 .content {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  outline: none;
 }
 
 .content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Nav scroll */
+.nav::-webkit-scrollbar {
   display: none;
 }
 

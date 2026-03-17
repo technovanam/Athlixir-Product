@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./layout.module.css";
@@ -41,6 +41,11 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current?.focus();
+  }, [pathname]);
 
   return (
     <div style={st.root}>
@@ -78,7 +83,7 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
         </div>
 
         {/* Nav */}
-        <nav style={st.nav}>
+        <nav style={st.nav} className={styles.nav}>
           {SIDEBAR_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -167,7 +172,12 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
         </header>
 
         {/* Page Content */}
-        <main className={styles.content} style={st.content}>
+        <main
+          ref={mainRef}
+          className={styles.content}
+          style={st.content}
+          tabIndex={-1}
+        >
           {children}
         </main>
       </div>
@@ -294,6 +304,8 @@ const st: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     gap: "var(--space-4)",
     overflowY: "auto",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
   },
   navLink: {
     display: "flex",
@@ -439,9 +451,11 @@ const st: Record<string, React.CSSProperties> = {
   content: {
     flex: 1,
     overflowY: "auto",
+    overflowX: "hidden",
     padding: "var(--space-40) var(--space-32)",
     scrollbarWidth: "none",
     msOverflowStyle: "none",
+    scrollBehavior: "smooth",
   },
   mobileOverlay: {
     position: "fixed",
