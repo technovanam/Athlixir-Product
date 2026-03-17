@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { ArrowRight, BarChart2, Shield, Zap, TrendingUp, LucideIcon } from 'lucide-react';
+import { ArrowRight, BarChart2, Shield, Zap, TrendingUp, LucideIcon, Play } from 'lucide-react';
+import Image from 'next/image';
 
 interface FeatureItem {
     icon: LucideIcon;
@@ -17,14 +18,14 @@ const Features = () => {
 
     return (
         <section id="features" className="py-16 md:py-24 bg-background relative text-white overflow-hidden">
-            {/* Background Gradient Overlays */}
+            {/* Enhanced Background Elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background z-0" />
             <div className="absolute inset-0 opacity-[0.15] z-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 
             <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-stretch relative z-10">
 
-                {/* Left Side - Featured Card */}
+                {/* Left Side - Enhanced Feature Card */}
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -32,7 +33,7 @@ const Features = () => {
                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="p-8 md:p-12 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 relative overflow-hidden group shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col h-full"
                 >
-                    {/* Enhanced Background Graphic to fill the gap */}
+                    {/* Animated Background Graphics */}
                     <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-80 h-80 pointer-events-none opacity-20 group-hover:opacity-30 transition-opacity hidden lg:block">
                         <div className="relative w-full h-full flex items-center justify-center">
                             <motion.div
@@ -45,7 +46,7 @@ const Features = () => {
                                 transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                                 className="absolute inset-10 border-[1px] border-white/10 rounded-full border-dashed"
                             />
-                            <BarChart2 size={120} className="text-primary/20" />
+                            <BarChart2 size={120} className="text-primary/20" aria-hidden="true" />
                         </div>
                     </div>
 
@@ -62,40 +63,57 @@ const Features = () => {
                         Track training sessions with surgical precision. Our AI identifies performance plateaus and provides actionable recovery protocols.
                     </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 relative z-10">
-                        <div className="space-y-4">
-                            {items.map((item, i) => (
-                                <div key={i} className="flex items-center space-x-3">
-                                    <item.icon className="w-4 h-4 text-primary" />
-                                    <span className="text-sm text-gray-300 font-medium">{item.text}</span>
+                    <div className="grid grid-cols-1 gap-4 mb-10 relative z-10">
+                        {items.map((item, i) => (
+                            <motion.div 
+                                key={i} 
+                                className="flex items-center space-x-3 group/item"
+                                whileHover={{ x: 5 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="p-2 bg-white/5 rounded-lg border border-white/10 group-hover/item:border-primary/30 transition-colors">
+                                    <item.icon className="w-4 h-4 text-primary" aria-hidden="true" />
                                 </div>
-                            ))}
-                        </div>
+                                <span className="text-sm text-gray-300 font-medium group-hover/item:text-white transition-colors">{item.text}</span>
+                            </motion.div>
+                        ))}
                     </div>
 
-                    {/* Secondary visual - 'Active Probes' to fill the lower right gap */}
-                    <div className="absolute bottom-12 right-12 hidden lg:flex flex-col items-end space-y-4 opacity-40">
-                        <div className="flex items-center space-x-4">
+                    {/* Enhanced Status Indicators */}
+                    <div className="absolute bottom-12 right-12 hidden lg:flex flex-col items-end space-y-4 opacity-40 relative z-10">
+                        <motion.div 
+                            className="flex items-center space-x-4"
+                            animate={{ opacity: [0.4, 0.8, 0.4] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        >
                             <span className="text-[8px] uppercase tracking-[0.3em] text-gray-500 font-black">Biometric Link</span>
                             <div className="w-12 h-[1px] bg-primary/30" />
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        </div>
-                        <div className="flex items-center space-x-4">
+                        </motion.div>
+                        <motion.div 
+                            className="flex items-center space-x-4"
+                            animate={{ opacity: [0.4, 0.8, 0.4] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                        >
                             <span className="text-[8px] uppercase tracking-[0.3em] text-gray-500 font-black">Neural Engine</span>
                             <div className="w-12 h-[1px] bg-primary/30" />
-                            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" style={{ animationDelay: '1s' }} />
-                        </div>
+                            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        </motion.div>
                     </div>
 
                     <div className="mt-auto relative z-10">
-                        <button className="px-8 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-hover transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-xs uppercase tracking-widest flex items-center space-x-3 group w-fit">
+                        <motion.button 
+                            className="group px-8 py-4 bg-primary text-white font-bold rounded-full hover:bg-primary-hover transition-all shadow-[0_0_20px_rgba(255,87,34,0.4)] text-xs uppercase tracking-widest flex items-center space-x-3 w-fit focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
                             <span>Explore Dashboard</span>
-                            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                        </button>
+                            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                        </motion.button>
                     </div>
                 </motion.div>
 
-                {/* Right Side - Content & Preview */}
+                {/* Right Side - Enhanced Content & Preview */}
                 <motion.div
                     initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -114,26 +132,33 @@ const Features = () => {
                             Wearable integration, sponsorship matching, and tier-based leaderboards — built specifically for India's rising champions.
                         </p>
 
-                        {/* New Info Tags to fill space */}
+                        {/* Enhanced Tech Tags */}
                         <div className="flex flex-wrap gap-2 lg:gap-3">
                             {['GPS Tech', 'Bio-Metric', 'Cloud Sync', 'AI Training'].map((tag) => (
-                                <span key={tag} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] uppercase tracking-wider text-gray-500 font-bold hover:border-blue-500/40 transition-colors">
+                                <motion.span 
+                                    key={tag} 
+                                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[9px] uppercase tracking-wider text-gray-500 font-bold hover:border-blue-500/40 transition-colors cursor-default"
+                                    whileHover={{ scale: 1.05, borderColor: 'rgba(59, 130, 246, 0.4)' }}
+                                >
                                     {tag}
-                                </span>
+                                </motion.span>
                             ))}
                         </div>
                     </div>
 
-                    {/* Preview Element */}
+                    {/* Enhanced Preview Element */}
                     <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:flex-grow rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 group min-h-[300px]">
-                        <img
-                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80"
-                            alt="Future Tech"
+                        <Image
+                            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200&h=900"
+                            alt="Advanced sports technology and analytics dashboard"
+                            width={1200}
+                            height={900}
                             className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-1000"
+                            priority
                         />
                         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
 
-                        {/* Floating overlay card */}
+                        {/* Enhanced Floating Overlay Card */}
                         <motion.div
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -141,16 +166,23 @@ const Features = () => {
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Active Metric</span>
-                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <Play className="w-3 h-3 text-emerald-500" aria-hidden="true" />
+                                </div>
                             </div>
-                            <div className="text-2xl font-bold mb-1">98.4 bpm</div>
+                            <div className="text-2xl font-bold mb-1">98.4 <span className="text-sm text-gray-400">bpm</span></div>
                             <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     whileInView={{ width: "70%" }}
                                     transition={{ duration: 1.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                    className="h-full bg-primary"
+                                    className="h-full bg-gradient-to-r from-primary to-emerald-500"
                                 />
+                            </div>
+                            <div className="flex justify-between text-[8px] text-gray-500 mt-1">
+                                <span>Resting: 65</span>
+                                <span>Max: 185</span>
                             </div>
                         </motion.div>
                     </div>

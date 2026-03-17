@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./dashboard.module.css";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import styles from "./layout.module.css";
 import {
   LayoutDashboard,
   Activity,
@@ -19,79 +21,26 @@ import {
   X,
   ChevronRight,
   CheckCircle2,
-  Clock,
   Zap,
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
-  { name: "Dashboard", icon: LayoutDashboard },
-  { name: "Performance Log", icon: Activity },
-  { name: "Injury & Recovery", icon: Flame },
-  { name: "Leaderboard", icon: Trophy },
-  { name: "Opportunities", icon: Briefcase },
-  { name: "Academy Locator", icon: GraduationCap },
-  { name: "Events", icon: Calendar },
-  { name: "Messages", icon: MessageSquare },
-  { name: "Sponsorship / Funding", icon: DollarSign },
-  { name: "Settings", icon: Settings },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Performance Log", href: "/athlete/performance", icon: Activity },
+  { name: "Injury & Recovery", href: "/athlete/injury", icon: Flame },
+  { name: "Leaderboard", href: "/athlete/leaderboard", icon: Trophy },
+  { name: "Opportunities", href: "/athlete/opportunities", icon: Briefcase },
+  { name: "Academy Locator", href: "/athlete/academies", icon: GraduationCap },
+  { name: "Events", href: "/athlete/events", icon: Calendar },
+  { name: "Messages", href: "/athlete/messages", icon: MessageSquare },
+  { name: "Sponsorship / Funding", href: "/athelete", icon: DollarSign },
+  { name: "Settings", href: "/athlete/settings", icon: Settings },
 ];
 
-const COMING_SOON_CARDS = [
-  {
-    title: "Performance Overview",
-    description: "Track your stats, PRs, and training insights at a glance.",
-    icon: Activity,
-    color: "var(--primary)",
-    wide: true,
-  },
-  {
-    title: "Upcoming Events",
-    description: "Your next matches, tournaments, and training sessions.",
-    icon: Calendar,
-    color: "var(--info)",
-    wide: false,
-  },
-  {
-    title: "Injury & Recovery",
-    description: "Monitor your recovery status and health alerts.",
-    icon: Flame,
-    color: "var(--warning)",
-    wide: false,
-  },
-  {
-    title: "Leaderboard",
-    description: "See where you rank among athletes in your sport.",
-    icon: Trophy,
-    color: "var(--chart-5)",
-    wide: false,
-  },
-  {
-    title: "Opportunities",
-    description: "Scouting calls, tryouts, and career pathways.",
-    icon: Briefcase,
-    color: "var(--success)",
-    wide: false,
-  },
-  {
-    title: "Sponsorship & Funding",
-    description: "Grants, sponsors, and financial support for athletes.",
-    icon: DollarSign,
-    color: "var(--chart-4)",
-    wide: false,
-  },
-  {
-    title: "Messages",
-    description: "Connect with coaches, scouts, and teams.",
-    icon: MessageSquare,
-    color: "var(--chart-3)",
-    wide: false,
-  },
-];
-
-export default function DashboardPage() {
+export default function AthleteLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("Dashboard");
+  const pathname = usePathname();
 
   return (
     <div style={st.root}>
@@ -131,12 +80,12 @@ export default function DashboardPage() {
         {/* Nav */}
         <nav style={st.nav}>
           {SIDEBAR_LINKS.map((link) => {
-            const isActive = activeLink === link.name;
+            const isActive = pathname === link.href;
             return (
-              <button
+              <Link
                 key={link.name}
+                href={link.href}
                 className={styles.navLink}
-                onClick={() => setActiveLink(link.name)}
                 title={!sidebarOpen ? link.name : ""}
                 style={{
                   ...st.navLink,
@@ -152,7 +101,7 @@ export default function DashboardPage() {
                 {sidebarOpen && (
                   <span style={st.navLinkText}>{link.name}</span>
                 )}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -219,58 +168,7 @@ export default function DashboardPage() {
 
         {/* Page Content */}
         <main className={styles.content} style={st.content}>
-          {/* Page Header */}
-          <div style={st.pageHeader}>
-            <div>
-              <h1 style={st.pageTitle}>Dashboard</h1>
-              <p style={st.pageSubtitle}>
-                Welcome back — your command center awaits.
-              </p>
-            </div>
-            <div style={st.liveBadge}>
-              <Zap size={14} style={{ color: "var(--primary)" }} />
-              <span style={st.liveBadgeText}>Coming Soon</span>
-            </div>
-          </div>
-
-          {/* Cards Grid */}
-          <div className={styles.grid}>
-            {COMING_SOON_CARDS.map((card) => (
-              <div
-                key={card.title}
-                className={`${styles.card} ${card.wide ? styles.cardWide : ""}`}
-                style={st.card}
-              >
-                {/* Diffuse glow */}
-                <div
-                  style={{
-                    ...st.cardGlow,
-                    background: card.color,
-                  }}
-                />
-
-                {/* Icon */}
-                <div
-                  style={{
-                    ...st.cardIconWrap,
-                    background: `color-mix(in srgb, ${card.color} 14%, transparent)`,
-                    border: `1px solid color-mix(in srgb, ${card.color} 28%, transparent)`,
-                  }}
-                >
-                  <card.icon size={22} style={{ color: card.color }} />
-                </div>
-
-                <h3 style={st.cardTitle}>{card.title}</h3>
-                <p style={st.cardDesc}>{card.description}</p>
-
-                {/* Badge */}
-                <div style={st.comingSoonBadge}>
-                  <Clock size={11} style={{ color: "var(--text-muted)" }} />
-                  <span style={st.comingSoonText}>Coming Soon</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          {children}
         </main>
       </div>
 
@@ -297,14 +195,12 @@ export default function DashboardPage() {
 
             <nav style={{ ...st.nav, padding: 0, gap: "var(--space-4)" }}>
               {SIDEBAR_LINKS.map((link) => {
-                const isActive = activeLink === link.name;
+                const isActive = pathname === link.href;
                 return (
-                  <button
+                  <Link
                     key={link.name}
-                    onClick={() => {
-                      setActiveLink(link.name);
-                      setMobileOpen(false);
-                    }}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
                     style={{
                       ...st.navLink,
                       background: isActive ? "var(--primary)" : "transparent",
@@ -313,7 +209,7 @@ export default function DashboardPage() {
                   >
                     <link.icon size={20} style={{ flexShrink: 0 }} />
                     <span style={st.navLinkText}>{link.name}</span>
-                  </button>
+                  </Link>
                 );
               })}
             </nav>
@@ -324,9 +220,6 @@ export default function DashboardPage() {
   );
 }
 
-/* ─────────────────────────────────────────
-   Inline style tokens — only CSS variables
-───────────────────────────────────────── */
 const st: Record<string, React.CSSProperties> = {
   root: {
     display: "flex",
@@ -336,8 +229,6 @@ const st: Record<string, React.CSSProperties> = {
     fontFamily: "var(--font-primary)",
     overflow: "hidden",
   },
-
-  /* Sidebar */
   sidebar: {
     flexDirection: "column",
     background: "rgba(15,15,15,0.65)",
@@ -348,7 +239,6 @@ const st: Record<string, React.CSSProperties> = {
     flexShrink: 0,
     zIndex: 40,
   },
-
   collapseBtn: {
     position: "absolute",
     top: "var(--space-32)",
@@ -365,7 +255,6 @@ const st: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     boxShadow: "0 0 14px rgba(255,87,34,0.45)",
   },
-
   logoArea: {
     display: "flex",
     alignItems: "center",
@@ -374,7 +263,6 @@ const st: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid var(--border-subtle)",
     overflow: "hidden",
   },
-
   logoBadge: {
     width: "36px",
     height: "36px",
@@ -386,13 +274,11 @@ const st: Record<string, React.CSSProperties> = {
     flexShrink: 0,
     boxShadow: "0 0 16px rgba(255,87,34,0.35)",
   },
-
   logoLetter: {
     fontWeight: "bold",
     fontSize: "var(--fs-h5)",
     color: "var(--text-inverse)",
   },
-
   brandName: {
     fontWeight: "bold",
     fontSize: "var(--fs-h6)",
@@ -401,7 +287,6 @@ const st: Record<string, React.CSSProperties> = {
     textTransform: "uppercase",
     whiteSpace: "nowrap",
   },
-
   nav: {
     flex: 1,
     padding: "var(--space-16) var(--space-12)",
@@ -410,7 +295,6 @@ const st: Record<string, React.CSSProperties> = {
     gap: "var(--space-4)",
     overflowY: "auto",
   },
-
   navLink: {
     display: "flex",
     alignItems: "center",
@@ -424,8 +308,8 @@ const st: Record<string, React.CSSProperties> = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     transition: "all var(--transition-fast)",
+    textDecoration: "none",
   },
-
   navLinkText: {
     fontSize: "var(--fs-body-sm)",
     fontWeight: "600",
@@ -434,8 +318,6 @@ const st: Record<string, React.CSSProperties> = {
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
-
-  /* Main */
   mainWrapper: {
     flex: 1,
     display: "flex",
@@ -444,7 +326,6 @@ const st: Record<string, React.CSSProperties> = {
     height: "100vh",
     overflow: "hidden",
   },
-
   topbar: {
     height: "var(--navbar-height)",
     background: "rgba(10,10,10,0.6)",
@@ -457,19 +338,16 @@ const st: Record<string, React.CSSProperties> = {
     flexShrink: 0,
     zIndex: 30,
   },
-
   topbarLeft: {
     display: "flex",
     alignItems: "center",
     gap: "var(--space-16)",
   },
-
   topbarRight: {
     display: "flex",
     alignItems: "center",
     gap: "var(--space-16)",
   },
-
   iconBtn: {
     background: "var(--surface-1)",
     border: "1px solid var(--border-default)",
@@ -483,7 +361,6 @@ const st: Record<string, React.CSSProperties> = {
     position: "relative",
     transition: "all var(--transition-fast)",
   },
-
   searchInput: {
     background: "var(--surface-1)",
     border: "1px solid var(--border-default)",
@@ -494,7 +371,6 @@ const st: Record<string, React.CSSProperties> = {
     color: "var(--text-main)",
     fontFamily: "var(--font-primary)",
   },
-
   bellDot: {
     position: "absolute",
     top: "8px",
@@ -505,7 +381,6 @@ const st: Record<string, React.CSSProperties> = {
     borderRadius: "var(--radius-full)",
     border: "2px solid var(--background)",
   },
-
   avatarWrap: {
     display: "flex",
     alignItems: "center",
@@ -514,11 +389,9 @@ const st: Record<string, React.CSSProperties> = {
     borderLeft: "1px solid var(--border-default)",
     cursor: "pointer",
   },
-
   avatarInfo: {
     textAlign: "right",
   },
-
   avatarName: {
     fontSize: "var(--fs-body-sm)",
     fontWeight: "700",
@@ -528,7 +401,6 @@ const st: Record<string, React.CSSProperties> = {
     margin: 0,
     lineHeight: 1,
   },
-
   avatarMeta: {
     display: "flex",
     alignItems: "center",
@@ -536,7 +408,6 @@ const st: Record<string, React.CSSProperties> = {
     gap: "var(--space-4)",
     marginTop: "4px",
   },
-
   avatarRole: {
     fontSize: "var(--fs-legal)",
     fontWeight: "700",
@@ -544,7 +415,6 @@ const st: Record<string, React.CSSProperties> = {
     letterSpacing: "var(--ls-caps)",
     textTransform: "uppercase",
   },
-
   avatarRing: {
     width: "38px",
     height: "38px",
@@ -553,7 +423,6 @@ const st: Record<string, React.CSSProperties> = {
     padding: "1.5px",
     flexShrink: 0,
   },
-
   avatarInner: {
     width: "100%",
     height: "100%",
@@ -567,132 +436,13 @@ const st: Record<string, React.CSSProperties> = {
     color: "var(--primary)",
     textTransform: "uppercase",
   },
-
-  /* Content */
   content: {
     flex: 1,
     overflowY: "auto",
     padding: "var(--space-40) var(--space-32)",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
   },
-
-  pageHeader: {
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    gap: "var(--space-16)",
-    marginBottom: "var(--space-40)",
-  },
-
-  pageTitle: {
-    fontSize: "var(--fs-h1)",
-    fontWeight: "700",
-    letterSpacing: "var(--ls-hero)",
-    color: "var(--text-main)",
-    margin: 0,
-    textTransform: "uppercase",
-  },
-
-  pageSubtitle: {
-    fontSize: "var(--fs-body-sm)",
-    color: "var(--text-muted)",
-    margin: "var(--space-8) 0 0 0",
-    lineHeight: "var(--lh-relaxed)",
-  },
-
-  liveBadge: {
-    display: "flex",
-    alignItems: "center",
-    gap: "var(--space-8)",
-    background: "var(--primary-soft)",
-    border: "1px solid rgba(255,87,34,0.22)",
-    borderRadius: "var(--radius-full)",
-    padding: "var(--space-8) var(--space-16)",
-    flexShrink: 0,
-  },
-
-  liveBadgeText: {
-    fontSize: "var(--fs-micro)",
-    fontWeight: "700",
-    color: "var(--primary)",
-    letterSpacing: "var(--ls-caps)",
-    textTransform: "uppercase",
-  },
-
-  /* Cards */
-  card: {
-    position: "relative",
-    background: "var(--surface-1)",
-    border: "1px solid var(--border-subtle)",
-    borderRadius: "var(--radius-xl)",
-    padding: "var(--space-32)",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    gap: "var(--space-12)",
-  },
-
-  cardGlow: {
-    position: "absolute",
-    top: "-50px",
-    right: "-50px",
-    width: "140px",
-    height: "140px",
-    borderRadius: "var(--radius-full)",
-    opacity: 0.07,
-    filter: "blur(50px)",
-    pointerEvents: "none",
-  },
-
-  cardIconWrap: {
-    width: "46px",
-    height: "46px",
-    borderRadius: "var(--radius-lg)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    marginBottom: "var(--space-4)",
-  },
-
-  cardTitle: {
-    fontSize: "var(--fs-h5)",
-    fontWeight: "700",
-    color: "var(--text-main)",
-    margin: 0,
-    textTransform: "uppercase",
-    letterSpacing: "var(--ls-heading)",
-  },
-
-  cardDesc: {
-    fontSize: "var(--fs-body-sm)",
-    color: "var(--text-muted)",
-    margin: 0,
-    lineHeight: "var(--lh-body)",
-    flex: 1,
-  },
-
-  comingSoonBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "var(--space-4)",
-    background: "var(--surface-2)",
-    border: "1px solid var(--border-default)",
-    borderRadius: "var(--radius-full)",
-    padding: "var(--space-4) var(--space-12)",
-    alignSelf: "flex-start",
-    marginTop: "var(--space-4)",
-  },
-
-  comingSoonText: {
-    fontSize: "var(--fs-micro)",
-    fontWeight: "700",
-    color: "var(--text-muted)",
-    letterSpacing: "var(--ls-caps)",
-    textTransform: "uppercase",
-  },
-
-  /* Mobile overlay */
   mobileOverlay: {
     position: "fixed",
     inset: 0,
@@ -701,7 +451,6 @@ const st: Record<string, React.CSSProperties> = {
     backdropFilter: "blur(4px)",
     display: "flex",
   },
-
   mobileSidebar: {
     width: "280px",
     background: "var(--surface-1)",
@@ -712,7 +461,6 @@ const st: Record<string, React.CSSProperties> = {
     height: "100%",
     overflowY: "auto",
   },
-
   mobileHeader: {
     display: "flex",
     alignItems: "center",
