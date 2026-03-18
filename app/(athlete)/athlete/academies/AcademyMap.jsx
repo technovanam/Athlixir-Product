@@ -37,6 +37,7 @@ export default function AcademyMap({ academies, onMarkerClick, searchLocation })
           center: [20.5937, 78.9629],
           zoom: 5,
           zoomControl: false,
+          scrollWheelZoom: false,
         });
 
         // Stadia Alidade Smooth Dark — visible dark-grey style

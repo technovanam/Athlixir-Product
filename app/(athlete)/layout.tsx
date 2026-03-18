@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./layout.module.css";
@@ -41,11 +41,6 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const mainRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    mainRef.current?.focus();
-  }, [pathname]);
 
   return (
     <div style={st.root}>
@@ -173,10 +168,8 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
 
         {/* Page Content */}
         <main
-          ref={mainRef}
           className={styles.content}
           style={st.content}
-          tabIndex={-1}
         >
           {children}
         </main>
@@ -233,21 +226,23 @@ export default function AthleteLayout({ children }: { children: React.ReactNode 
 const st: Record<string, React.CSSProperties> = {
   root: {
     display: "flex",
-    height: "100vh",
+    minHeight: "100vh",
     background: "var(--background)",
     color: "var(--text-main)",
     fontFamily: "var(--font-primary)",
-    overflow: "hidden",
   },
   sidebar: {
     flexDirection: "column",
     background: "rgba(15,15,15,0.65)",
     borderRight: "1px solid var(--border-subtle)",
-    position: "relative",
+    position: "sticky",
+    top: 0,
+    height: "100vh",
     transition: "width var(--transition-toggle)",
     backdropFilter: "blur(16px)",
     flexShrink: 0,
     zIndex: 40,
+    overflowY: "auto",
   },
   collapseBtn: {
     position: "absolute",
@@ -335,8 +330,7 @@ const st: Record<string, React.CSSProperties> = {
     display: "flex",
     flexDirection: "column",
     minWidth: 0,
-    height: "100vh",
-    overflow: "hidden",
+    minHeight: "100vh",
   },
   topbar: {
     height: "var(--navbar-height)",
@@ -348,6 +342,8 @@ const st: Record<string, React.CSSProperties> = {
     justifyContent: "space-between",
     padding: "0 var(--space-24)",
     flexShrink: 0,
+    position: "sticky",
+    top: 0,
     zIndex: 30,
   },
   topbarLeft: {
@@ -450,12 +446,7 @@ const st: Record<string, React.CSSProperties> = {
   },
   content: {
     flex: 1,
-    overflowY: "auto",
-    overflowX: "hidden",
     padding: "var(--space-40) var(--space-32)",
-    scrollbarWidth: "none",
-    msOverflowStyle: "none",
-    scrollBehavior: "smooth",
   },
   mobileOverlay: {
     position: "fixed",
