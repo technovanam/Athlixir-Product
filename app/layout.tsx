@@ -57,6 +57,7 @@ export default function RootLayout({
         <LenisProvider>
           {children}
         </LenisProvider>
+        <div id="modal-root" />
       </body>
     </html>
   );

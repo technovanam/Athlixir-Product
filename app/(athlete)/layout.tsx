@@ -26,15 +26,15 @@ import {
 
 const SIDEBAR_LINKS = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Performance Log", href: "/athlete/performance", icon: Activity },
-  { name: "Injury & Recovery", href: "/athlete/injury", icon: Flame },
-  { name: "Leaderboard", href: "/athlete/leaderboard", icon: Trophy },
-  { name: "Opportunities", href: "/athlete/opportunities", icon: Briefcase },
-  { name: "Academy Locator", href: "/athlete/academies", icon: GraduationCap },
-  { name: "Events", href: "/athlete/events", icon: Calendar },
-  { name: "Messages", href: "/athlete/messages", icon: MessageSquare },
+  { name: "Performance Log", href: "/athelete/performance", icon: Activity },
+  { name: "Injury & Recovery", href: "/athelete/injury", icon: Flame },
+  { name: "Leaderboard", href: "/athelete/leaderboard", icon: Trophy },
+  { name: "Opportunities", href: "/athelete/opportunities", icon: Briefcase },
+  { name: "Academy Locator", href: "/athelete/academies", icon: GraduationCap },
+  { name: "Events", href: "/athelete/events", icon: Calendar },
+  { name: "Messages", href: "/athelete/messages", icon: MessageSquare },
   { name: "Sponsorship / Funding", href: "/athelete", icon: DollarSign },
-  { name: "Settings", href: "/athlete/settings", icon: Settings },
+  { name: "Settings", href: "/athelete/settings", icon: Settings },
 ];
 
 export default function AthleteLayout({ children }: { children: React.ReactNode }) {
@@ -447,6 +447,7 @@ const st: Record<string, React.CSSProperties> = {
   content: {
     flex: 1,
     padding: "var(--space-40) var(--space-32)",
+    overflow: "auto",
   },
   mobileOverlay: {
     position: "fixed",

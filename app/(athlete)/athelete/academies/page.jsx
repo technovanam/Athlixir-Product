@@ -158,13 +158,14 @@ function AcademyModal({ academy, onClose }) {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-2xl rounded-2xl bg-[#0f0f0f] border border-white/10 shadow-xl my-8"
+        className="w-full max-w-2xl rounded-2xl bg-[#0f0f0f] border border-white/10 shadow-xl overflow-hidden"
+        style={{ maxHeight: "calc(100vh - 32px)", overflowY: "auto" }}
       >
         <div className="h-56 relative overflow-hidden rounded-t-2xl">
           <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" />
@@ -328,11 +329,14 @@ export default function AcademyLocatorPage() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col hover:border-primary/20 transition-all group cursor-pointer"
+                  whileHover={{ scale: 1.03, y: -4, boxShadow: "0 16px 40px rgba(0,0,0,0.6)" }}
+                  whileTap={{ scale: 0.98 }}
+                  className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col hover:border-white/20 transition-colors cursor-pointer"
+                  style={{ willChange: "transform" }}
                   onClick={() => setDetailId(aca.id)}
                 >
                   <div className="h-44 relative overflow-hidden">
-                    <img src={aca.image} alt={aca.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <motion.img src={aca.image} alt={aca.name} className="w-full h-full object-cover" loading="lazy" whileHover={{ scale: 1.08 }} transition={{ duration: 0.4 }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-3 left-3 flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-primary/90 text-white">{aca.sport}</span>

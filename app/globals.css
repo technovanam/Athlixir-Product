@@ -326,9 +326,20 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Improve rendering performance */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+}
+
+/* Portal root — sits outside body stacking context so fixed modals work correctly */
+#modal-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+}
+#modal-root > * {
+  pointer-events: auto;
 }
 
 /* Optimize images and videos */

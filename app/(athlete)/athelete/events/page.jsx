@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -138,14 +138,25 @@ function FeaturedSlider({ onSelect }) {
           className="absolute inset-0 transition-opacity duration-1000"
           style={{ opacity: i === idx ? 1 : 0, zIndex: i === idx ? 1 : 0 }}
         >
-          <img src={ev.image} alt={ev.title} className="w-full h-full object-cover" />
+          <motion.img
+            src={ev.image}
+            alt={ev.title}
+            className="w-full h-full object-cover"
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.5 }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         </div>
       ))}
 
       {/* Content — always on top */}
-      <div className="absolute inset-0 z-10 p-6 sm:p-8 flex flex-col justify-end cursor-pointer" onClick={() => onSelect(featuredEvents[idx].id)}>
+      <motion.div
+        className="absolute inset-0 z-10 p-6 sm:p-8 flex flex-col justify-end cursor-pointer"
+        onClick={() => onSelect(featuredEvents[idx].id)}
+        whileHover="hover"
+        whileTap={{ scale: 0.99 }}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={idx}
@@ -169,7 +180,7 @@ function FeaturedSlider({ onSelect }) {
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Dot indicators */}
       {featuredEvents.length > 1 && (
@@ -193,6 +204,12 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [detailId, setDetailId] = useState(null);
   const [bookmarks, setBookmarks] = useState([]);
+  const [modalRoot, setModalRoot] = useState(null);
+  const topRef = useRef(null);
+
+  useEffect(() => {
+    setModalRoot(document.getElementById("modal-root"));
+  }, []);
 
   const filtered = useMemo(() => {
     return EVENTS.filter((ev) => {
@@ -204,6 +221,9 @@ export default function EventsPage() {
 
   const detailEvent = detailId ? EVENTS.find((e) => e.id === detailId) : null;
 
+  const openDetail = (id) => setDetailId(id);
+  const closeDetail = () => setDetailId(null);
+
   const toggleBookmark = (id) =>
     setBookmarks((prev) => prev.includes(id) ? prev.filter((b) => b !== id) : [...prev, id]);
 
@@ -211,6 +231,8 @@ export default function EventsPage() {
 
   return (
     <div className="space-y-8 pb-12 max-w-6xl mx-auto">
+      <div ref={topRef} />
+
       {/* Header */}
       <header>
         <h1 className="text-2xl font-bold text-white/95 flex items-center gap-2">
@@ -221,7 +243,7 @@ export default function EventsPage() {
       </header>
 
       {/* Featured Slider — admin-controlled via featured: true */}
-      <FeaturedSlider onSelect={setDetailId} />
+      <FeaturedSlider onSelect={openDetail} />
 
       {/* Search & Type Filters */}
       <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
@@ -270,14 +292,20 @@ export default function EventsPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col hover:border-primary/20 transition-all group"
+                whileHover={{ scale: 1.03, y: -4, boxShadow: "0 16px 40px rgba(0,0,0,0.6)" }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => openDetail(ev.id)}
+                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden flex flex-col hover:border-white/20 transition-colors cursor-pointer group"
+                style={{ willChange: "transform" }}
               >
-                <div className="h-40 relative overflow-hidden cursor-pointer" onClick={() => setDetailId(ev.id)}>
-                  <img
+                <div className="h-40 relative overflow-hidden">
+                  <motion.img
                     src={ev.image}
                     alt={ev.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover"
                     loading="lazy"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.4 }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                   <div className="absolute top-3 left-3">
@@ -296,10 +324,7 @@ export default function EventsPage() {
                 </div>
 
                 <div className="p-4 flex flex-col flex-1">
-                  <h3
-                    className="font-semibold text-white text-sm cursor-pointer hover:text-primary transition-colors"
-                    onClick={() => setDetailId(ev.id)}
-                  >
+                  <h3 className="font-semibold text-white text-sm">
                     {ev.title}
                   </h3>
                   <div className="mt-2 space-y-1">
@@ -323,13 +348,9 @@ export default function EventsPage() {
 
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06]">
                     <span className="text-xs text-gray-500 flex items-center gap-1"><Tag size={12} /> {ev.entryFee}</span>
-                    <button
-                      type="button"
-                      onClick={() => setDetailId(ev.id)}
-                      className="text-xs text-primary font-medium flex items-center gap-1 hover:underline"
-                    >
+                    <span className="text-xs text-white/50 font-medium flex items-center gap-1">
                       View details <ChevronRight size={14} />
-                    </button>
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -340,118 +361,98 @@ export default function EventsPage() {
 
       {/* Host CTA */}
       <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-6 flex flex-col sm:flex-row items-center gap-4">
-        <div className="p-3 bg-primary/10 text-primary rounded-xl shrink-0">
-          <Trophy size={24} />
-        </div>
+        <div className="p-3 bg-primary/10 text-primary rounded-xl shrink-0"><Trophy size={24} /></div>
         <div className="flex-1 text-center sm:text-left">
           <h3 className="font-semibold text-white text-sm">Host your own event</h3>
           <p className="text-xs text-gray-500 mt-0.5">Organizing a meet or championship? Publish it on Athlixir to reach thousands of athletes.</p>
         </div>
-        <button type="button" className="px-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm font-medium text-white/90 hover:bg-white/10 transition-colors">
-          Submit Event
-        </button>
+        <button type="button" className="px-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm font-medium text-white/90 hover:bg-white/10 transition-colors">Submit Event</button>
       </div>
 
-      {/* Detail popup — fixed centered modal via portal */}
-      {typeof window !== "undefined" && detailEvent && createPortal(
-        <motion.div
-          key="backdrop"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          onClick={() => setDetailId(null)}
-          style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.82)", backdropFilter: "blur(8px)", padding: 24 }}
-        >
-          <motion.div
-            key="popup"
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ duration: 0.25 }}
-            onClick={(e) => e.stopPropagation()}
-            style={{ width: "100%", maxWidth: 680, background: "#111", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.8)" }}
-          >
-            {/* Image banner */}
-            <div style={{ position: "relative", height: 200, flexShrink: 0 }}>
-              <img src={detailEvent.image} alt={detailEvent.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #111 0%, transparent 55%)" }} />
-              <button onClick={() => setDetailId(null)} style={{ position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: 8, background: "rgba(0,0,0,0.6)", border: "none", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <X size={16} />
-              </button>
-              {/* badges over image */}
-              <div style={{ position: "absolute", bottom: 14, left: 16, display: "flex", gap: 6 }}>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${getStatusColor(detailEvent.status)}`}>{detailEvent.status}</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${getTypeColor(detailEvent.type)}`}>{detailEvent.type}</span>
-                <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "rgba(255,255,255,0.08)", color: "#aaa" }}>{detailEvent.sport}</span>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: "20px 24px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-              {/* Title */}
-              <div>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: "white", margin: 0, lineHeight: 1.3 }}>{detailEvent.title}</h2>
-                <p style={{ fontSize: 12, color: "#555", margin: "4px 0 0" }}>by {detailEvent.organizer}</p>
-              </div>
-
-              {/* Description */}
-              <p style={{ fontSize: 13, color: "#888", margin: 0, lineHeight: 1.6 }}>{detailEvent.description}</p>
-
-              {/* 4 stats */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
-                {[
-                  { label: "Date", value: detailEvent.date },
-                  { label: "Entry Fee", value: detailEvent.entryFee },
-                  { label: "Age Group", value: detailEvent.ageGroup },
-                  { label: "Registered", value: `${detailEvent.registered}/${detailEvent.capacity}` },
-                ].map(({ label, value }) => (
-                  <div key={label} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "10px 12px" }}>
-                    <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: 0 }}>{label}</p>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "white", margin: "3px 0 0" }}>{value}</p>
+      {/* Modal portal into #modal-root (outside body transform stacking context) */}
+      {modalRoot && createPortal(
+        <AnimatePresence>
+          {detailEvent && (
+            <motion.div
+              key="overlay"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeDetail}
+              style={{ position: "fixed", inset: 0, zIndex: 99999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
+            >
+              <motion.div
+                key="modal"
+                initial={{ opacity: 0, scale: 0.93, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.93, y: 20 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                onClick={(e) => e.stopPropagation()}
+                style={{ position: "relative", width: "100%", maxWidth: 580, maxHeight: "calc(100vh - 40px)", background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.95)", display: "flex", flexDirection: "column" }}
+              >
+                {/* Image */}
+                <div style={{ position: "relative", height: 175, flexShrink: 0 }}>
+                  <img src={detailEvent.image} alt={detailEvent.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #111 0%, transparent 55%)" }} />
+                  <div style={{ position: "absolute", bottom: 12, left: 16, display: "flex", gap: 6 }}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${getStatusColor(detailEvent.status)}`}>{detailEvent.status}</span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${getTypeColor(detailEvent.type)}`}>{detailEvent.type}</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 500, background: "rgba(255,255,255,0.08)", color: "#aaa" }}>{detailEvent.sport}</span>
                   </div>
-                ))}
-              </div>
-
-              {/* Venue + Deadline + Eligibility */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "10px 12px" }}>
-                  <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 4px" }}>Venue</p>
-                  <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, display: "flex", alignItems: "flex-start", gap: 4 }}>
-                    <MapPin size={12} style={{ color: "#FF5722", flexShrink: 0, marginTop: 1 }} />{detailEvent.venue}
-                  </p>
                 </div>
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "10px 12px" }}>
-                  <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 4px" }}>Deadline</p>
-                  <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, display: "flex", alignItems: "center", gap: 4 }}>
-                    <Clock size={12} style={{ flexShrink: 0 }} />{detailEvent.deadline}
-                  </p>
-                </div>
-                <div style={{ background: "rgba(255,87,34,0.06)", border: "1px solid rgba(255,87,34,0.15)", borderRadius: 12, padding: "10px 12px" }}>
-                  <p style={{ fontSize: 9, color: "#FF5722", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 4px" }}>Prizes</p>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "#FF5722", margin: 0 }}>{detailEvent.prizes}</p>
-                </div>
-              </div>
 
-              {/* Eligibility */}
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "10px 14px" }}>
-                <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 3px" }}>Eligibility</p>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0 }}>{detailEvent.eligibility}</p>
-              </div>
-
-              {/* Actions */}
-              <div style={{ display: "flex", gap: 10 }}>
-                <button type="button" onClick={() => toggleBookmark(detailEvent.id)}
-                  style={{ padding: "11px 18px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.85)", fontSize: 13, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-                  {bookmarks.includes(detailEvent.id) ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
-                  {bookmarks.includes(detailEvent.id) ? "Saved" : "Save"}
+                {/* X close button */}
+                <button onClick={closeDetail} style={{ position: "absolute", top: 12, right: 12, zIndex: 10, width: 34, height: 34, borderRadius: 10, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.2)", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <X size={16} strokeWidth={2.5} />
                 </button>
-                <button type="button"
-                  style={{ flex: 1, padding: "11px", borderRadius: 12, border: "none", background: "#FF5722", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                  Register Now <ArrowUpRight size={15} />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>,
-        document.body
+
+                {/* Scrollable body */}
+                <div style={{ overflowY: "auto", padding: "16px 20px 20px", display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
+                  <div>
+                    <h2 style={{ fontSize: 18, fontWeight: 800, color: "white", margin: 0, lineHeight: 1.3 }}>{detailEvent.title}</h2>
+                    <p style={{ fontSize: 11, color: "#555", margin: "3px 0 0" }}>by {detailEvent.organizer}</p>
+                  </div>
+                  <p style={{ fontSize: 12, color: "#777", margin: 0, lineHeight: 1.65 }}>{detailEvent.description}</p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6 }}>
+                    {[{ label: "Date", value: detailEvent.date }, { label: "Entry Fee", value: detailEvent.entryFee }, { label: "Age Group", value: detailEvent.ageGroup }, { label: "Registered", value: `${detailEvent.registered}/${detailEvent.capacity}` }].map(({ label, value }) => (
+                      <div key={label} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "8px 10px" }}>
+                        <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: 0 }}>{label}</p>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: "white", margin: "2px 0 0" }}>{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 10px" }}>
+                      <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 3px" }}>Venue</p>
+                      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: 0, display: "flex", alignItems: "flex-start", gap: 4 }}><MapPin size={11} style={{ flexShrink: 0, marginTop: 1 }} />{detailEvent.venue}</p>
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 10px" }}>
+                      <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 3px" }}>Deadline</p>
+                      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: 0, display: "flex", alignItems: "center", gap: 4 }}><Clock size={11} style={{ flexShrink: 0 }} />{detailEvent.deadline}</p>
+                    </div>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 10px" }}>
+                      <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 3px" }}>Prizes</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: "white", margin: 0 }}>{detailEvent.prizes}</p>
+                    </div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "8px 12px" }}>
+                    <p style={{ fontSize: 9, color: "#555", textTransform: "uppercase", letterSpacing: 1, margin: "0 0 2px" }}>Eligibility</p>
+                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", margin: 0 }}>{detailEvent.eligibility}</p>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button type="button" onClick={() => toggleBookmark(detailEvent.id)} style={{ padding: "10px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.85)", fontSize: 12, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                      {bookmarks.includes(detailEvent.id) ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+                      {bookmarks.includes(detailEvent.id) ? "Saved" : "Save"}
+                    </button>
+                    <button type="button" style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: "white", color: "black", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                      Register Now <ArrowUpRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        modalRoot
       )}
     </div>
   );
