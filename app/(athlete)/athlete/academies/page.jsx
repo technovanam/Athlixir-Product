@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap, Search, MapPin, Phone, Star, Globe,
-  CheckCircle2, Info, Clock, Users, X, ChevronRight, Award, Dumbbell
+  CheckCircle2, Info, Clock, Users, X, ChevronRight, Award, Dumbbell, ChevronDown, Filter
 } from "lucide-react";
 
 const AcademyMap = dynamic(() => import("./AcademyMap"), { ssr: false });
@@ -97,6 +97,61 @@ const EVENTS = [
 ];
 
 const inputClass = "w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-primary/50";
+
+const SPORT_EMOJIS = { All: "🏅", Football: "⚽", Cricket: "🏏", Swimming: "🏊", Athletics: "🏃", Badminton: "🏸", Basketball: "🏀", Tennis: "🎾", Boxing: "🥊" };
+
+function SportDropdown({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+          open ? "bg-primary/10 border-primary/50 text-white" : "bg-white/[0.06] border-white/[0.08] text-gray-300 hover:border-white/20 hover:text-white"
+        }`}
+      >
+        <Filter size={14} className={open ? "text-primary" : "text-gray-400"} />
+        <span>{SPORT_EMOJIS[value]} {value}</span>
+        <ChevronDown size={14} className={`transition-transform duration-200 ${open ? "rotate-180 text-primary" : "text-gray-400"}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-white/[0.08] bg-[#161616] shadow-lg z-50 overflow-hidden py-1"
+          >
+            {SPORTS_OPTIONS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => { onChange(s); setOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  value === s
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-gray-300 hover:bg-white/[0.06] hover:text-white"
+                }`}
+              >
+                <span className="text-base">{SPORT_EMOJIS[s]}</span>
+                {s}
+                {value === s && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function AcademyModal({ academy, onClose }) {
   if (!academy) return null;
@@ -251,18 +306,7 @@ export default function AcademyLocatorPage() {
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 flex-wrap">
-            {SPORTS_OPTIONS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSportFilter(s)}
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${sportFilter === s ? "bg-primary text-white" : "bg-white/[0.06] text-gray-400 hover:text-white border border-white/[0.08]"}`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+          <SportDropdown value={sportFilter} onChange={setSportFilter} />
         </div>
         <p className="text-xs text-gray-500 mt-3">{filtered.length} academies · {filteredEvents.length} events found</p>
       </section>
